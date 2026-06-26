@@ -1,0 +1,16 @@
+반도체 3대 단위공정의 흐름은?	증착(Deposition, 막 형성: CVD/ALD/PVD) → 포토(Litho, resist 도포→노광→현상으로 패턴 전사) → 에칭(Etch, 불필요부 제거). 이 cycle을 수백 번 반복.	process P3
+GDS layer와 마스크의 관계는?	레이아웃의 각 layer가 곧 마스크 한 장에 대응. 설계한 회로가 물리적 마스크와 공정 step으로 번역된다.	process P3
+EUV란?	파장 13.5nm 극자외선 노광. ArF(193nm) 대비 멀티패터닝 횟수를 줄여 미세 패턴을 한 번에 형성. DRAM 1a 노드부터 본격 도입.	process P3
+High-NA EUV란?	같은 13.5nm 파장이되 렌즈 개구수 NA를 0.33→0.55로 키워 해상도를 높인 것. sub-10nm급 차세대 노드용.	process P3
+EUV의 비용·난점은?	장비가 극도로 비싸고 광원 power·반사형 마스크·pellicle·throughput이 과제. 그래서 꼭 필요한 layer에만 선택적으로 사용.	process P3
+스케일링(미세화)이란?	최소 피처 F를 줄여 같은 면적에 더 많은 소자를 넣는 것. 밀도·원가·성능 개선. 물리·SI·열 한계에 점점 부딪힘.	process P3
+DRAM 미세화의 핵심 난제는?	capacitor 종횡비. sensing·retention에 필요한 셀 capacitance를 유지하려고 캡을 길쭉하게(종횡비 100:1 이상) 세워야 해 제조·기계적 안정성이 극히 어렵다.	process P3
+NAND 미세화 방식은?	평면 미세화를 포기하고 셀을 Z축으로 적층(300단+). 난제는 미세 패터닝이 아니라 깊은 channel hole의 고종횡비 etch와 균일도.	process P3
+DRAM과 NAND 미세화의 차이를 한 줄로?	DRAM=평면 capacitor 종횡비, NAND=수직 적층. 같은 집적도 향상을 다른 물리 축으로 푼다.	process P3
+수율(yield)이란?	웨이퍼에서 만든 die 중 정상 동작 양품의 비율. 결함 밀도·공정 산포가 낮을수록 높다.	process P3
+메모리가 로직보다 수율 구제가 쉬운 이유는?	셀이 규칙적으로 반복되는 array 구조라, 여분 회로(redundancy)로 불량 위치를 재매핑해 양품으로 살릴 수 있다.	process P3
+Redundancy/repair의 구성요소는?	spare row/column(DRAM)·spare block/plane(NAND)을 미리 넣고, 테스트로 불량 주소를 찾아 fuse(laser/e-fuse)로 spare에 재매핑.	process P3
+Repair는 어떻게 동작하나?	BIST가 불량 셀 주소를 검출 → fuse를 프로그램해 불량 주소가 들어오면 디코더가 spare로 우회. 칩 스스로 하면 BISR(built-in self-repair).	process P3
+Repair 정보는 어디 저장되나?	fuse array에 비휘발적으로 저장. 부팅 시 로드해 불량 주소 재매핑을 활성화한다.	process P3
+Redundancy를 무한정 못 넣는 이유는?	여분 회로가 면적·원가를 먹고 그 자체도 불량 날 수 있어 적정량 trade-off가 필요. 수율-면적-redundancy 균형 문제.	process P3
+yield/redundancy가 디지털 설계와 닿는 지점은?	BIST/BISR·fuse·spare 디코더는 전형적 DFT 디지털 회로. 공정 불량을 회로로 구제하는, 공정과 설계가 만나는 접점.	process P3

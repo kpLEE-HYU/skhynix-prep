@@ -1,0 +1,20 @@
+setup time 정의?	데이터가 clock edge 이전 t_su 동안 안정해야 한다는 제약. 위반 시 메타. 가장 느린(max delay) path가 결정.	sta P1
+hold time 정의?	데이터가 clock edge 이후 t_h 동안 안정해야 한다는 제약. 가장 빠른(min delay) path가 결정.	sta P1
+Setup slack 식?	Setup slack = T_clk + skew − (t_cq + t_comb_max + t_su). 음수면 path가 너무 느림. clock 늦추면 해결.	sta P1
+Hold slack 식?	Hold slack = (t_cq + t_comb_min) − (t_h + skew). 주기와 무관. clock 늦춰도 안 풀림 → buffer/delay 추가로 fix.	sta P1
+setup과 hold 중 더 위험한 위반은?	Hold. 주기 무관이라 clock을 늦춰도 안 풀리고 silicon에서 발견되면 chip이 죽음. Setup은 주파수 낮추면 임시 회피 가능.	sta P1
+slack 정의?	slack = required time − arrival time. 양수=마진 만족, 음수=위반. WNS=worst negative slack, TNS=총합.	sta P1
+clock skew란?	같은 clock이 launch FF와 capture FF에 도착하는 공간적(정적) 시각 차이. useful skew는 setup 도움/hold 악화.	sta P1
+clock jitter란?	같은 지점에서 clock edge가 시간적으로(동적) 흔들리는 변동(cycle-to-cycle). 원인=PLL/DLL, 전원노이즈, crosstalk.	sta P1
+clock uncertainty를 setup/hold에 어떻게 적용?	uncertainty=skew+jitter+margin. setup 체크엔 빼고(available time 감소), hold 체크엔 더함(pessimism).	sta P1
+false path란?	실제 데이터가 전파 안 되거나 타이밍 잡을 필요 없는 경로(비동기 crossing, mutually exclusive MUX, 정적 config). set_false_path로 제외.	sta P1
+multicycle path란?	데이터가 N cycle에 한 번만 캡처되면 되는 경로. set_multicycle_path N으로 setup 완화. hold MCP도 함께 설정해야 hold 안 깨짐.	sta P1
+OCV(On-Chip Variation)란?	같은 chip 안에서도 위치별 P/V/T가 달라 셀 지연이 다른 현상. launch는 느리게/capture는 빠르게 derate 곱해 worst를 봄.	sta P1
+AOCV/POCV란?	단순 OCV의 과도 pessimism을 줄이는 기법. AOCV=path 깊이별 변동 평균화, POCV=셀별 통계분포(statistical) 사용.	sta P1
+setup/hold가 worst인 corner는?	setup은 slow corner(SS/저전압/고온), hold는 fast corner(FF/고전압/저온). MCMM으로 다수 corner·mode 검증.	sta P1
+recovery time이란?	비동기 reset 해제(deassert)가 clock edge 이전 일정시간 안정해야 하는 체크. setup과 유사.	sta P1
+removal time이란?	비동기 reset이 clock edge 이후 일정시간 유지돼야 하는 체크. hold와 유사. 위반 시 reset 해제 순간 메타.	sta P1
+reset synchronizer가 필요한 이유?	async assert/sync deassert. 모든 FF가 같은 edge에 동시에 reset 해제되게 해 recovery/removal·메타 방지. RDC와 연결.	sta P1
+timing closure란?	합성~배치배선 후 남은 setup/hold/transition/DRV 위반을 반복 수정해 모든 corner·mode에서 slack≥0을 만드는 과정.	sta P1 지원서연계
+ECO란?	배치배선을 크게 안 흔들고 셀 resize/buffer 삽입/VT swap/reroute로 국소 수정. setup ECO=upsize, hold ECO=buffer 삽입.	sta P1 지원서연계
+sign-off STA 도구와 포함요소?	Synopsys PrimeTime. SI crosstalk delay, POCV, noise 포함해 최종 timing sign-off.	sta P1 지원서연계

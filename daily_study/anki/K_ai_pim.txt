@@ -1,0 +1,17 @@
+AI-for-EDA란?	ML을 칩 설계·검증에 넣어 자동화·최적화. PPA 최적화(Synopsys DSO.ai, Cadence Cerebrus, RL 기반)와 검증 AI(Lint/CDC false violation 분류, RTL 디버그 보조).	aipim P3 지원서연계
+DSO.ai가 무엇인가?	Synopsys의 AI-for-EDA 솔루션. 강화학습으로 합성·P&R 파라미터 공간을 탐색해 PPA(성능·전력·면적)를 자동 최적화.	aipim P3 지원서연계
+본인 RTL Sign-off Agent 경험을 한 줄로?	도메인 지식 기반 Sign-off Agent로 deterministic tool DB와 RAG/LLM을 rule 특성에 따라 분기, 근거 신뢰도 스코어링. Pilot false violation 20%↓.	aipim P3 지원서연계
+본인 검증 자동화 정량 성과는?	RTL Lint Pilot false violation 20%↓, RDC 방법론 false violation 87.7%↓, SFR-to-HW CDC noise 약 95% 분류로 human effort 감소.	aipim P3 지원서연계
+검증에서 AI를 sign-off 대체로 못 쓰는 이유는?	static sign-off는 100% 정확성이 전제. AI는 잔여 오류를 신뢰할 수 없어 대체가 아니라 분류·우선순위·근거 제시로 human effort를 줄이는 보조에 둬야 함.	aipim P3 지원서연계
+Memory wall이란?	연산 성능은 빠르게 느는데 메모리 대역폭·데이터 이동이 못 따라가 시스템이 메모리에서 막히는 현상. AI의 진짜 병목은 연산이 아니라 데이터 이동(에너지·지연).	aipim P3 지원서연계
+Memory wall의 두 가지 해법은?	① 메모리를 연산기 가까이 붙여 대역폭↑(HBM, 외부 해법) ② 연산을 메모리 안에 넣어 데이터 이동 제거(PIM, 내부 해법).	aipim P3 지원서연계
+PIM(Processing-in-Memory)이란?	연산 유닛을 메모리 안/근처에 둬 데이터를 칩 밖으로 안 옮기고 처리. 외부 핀보다 훨씬 큰 내부 DRAM 대역폭을 활용해 memory wall 완화.	aipim P3 지원서연계
+PIM이 memory wall을 해결하는 핵심 원리는?	DRAM 내부 대역폭이 외부 핀 대역폭보다 훨씬 큼. 연산을 bank 안에 둬 데이터를 밖으로 안 옮기고 내부 대역폭으로 바로 계산 → 속도↑, 데이터 이동 전력↓.	aipim P3 지원서연계
+SK하이닉스 GDDR6-AiM이란?	GDDR6 DRAM 각 bank 안에 MAC 연산기를 넣은 PIM. all-bank 병렬. 1GB, 외부 64GB/s vs 내부 GEMV 0.5TB/s(8배). 특정 연산 최대 16배·데이터 이동 전력 약 80%↓.	aipim P3 지원서연계
+AiMX란?	GDDR6-AiM 칩 여러 개를 묶은 생성형 AI 가속 카드. LLM 워크로드에서 GPU 대비 처리시간 약 10배↓, 전력 1/5.	aipim P3 지원서연계
+HBM-PIM이란?	HBM 적층 die 안에 연산기를 넣어 HBM의 초광대역과 PIM을 결합하는 방향. 메모리 병목이 큰 대형 AI 대상.	aipim P3 지원서연계
+PIM은 어떤 연산에 유리한가?	memory-bound·단순 반복 연산(LLM의 GEMV, 벡터연산). compute-bound·복잡 제어는 GPU가 유리해 둘을 나눠 맡긴다.	aipim P3 지원서연계
+HBM과 PIM은 어떻게 상보적인가?	HBM=GPU 옆에서 TB/s 대역폭 공급(외부 해법), PIM=memory-bound 연산을 메모리 안에서 처리(내부 해법). compute-bound는 GPU+HBM, memory-bound는 PIM.	aipim P3 지원서연계
+GDDR6-AiM과 HBM-PIM의 차이는?	GDDR6-AiM은 GDDR 기반 카드형(AiMX), HBM-PIM은 HBM 적층 안에 연산을 넣어 초광대역과 결합. 타깃 시스템·대역폭 규모가 다르다.	aipim P3 지원서연계
+신입 설계자가 PIM/HBM에서 기여할 부분은?	PIM의 bank 내 MAC·명령 디코딩·all-bank 제어, HBM base die의 고속 I/O·테스트 로직 RTL 설계·검증. AI-for-EDA로 개발 TAT 단축.	aipim P3 지원서연계
+지원자 강점과 메모리 R&D의 연결점은?	디지털 설계·CDC·STA·검증 자동화 강점이 PIM 로직·HBM base die 같은 '메모리 속 디지털'에 직접 닿고, AI 기반 검증 자동화 경험으로 개발을 가속.	aipim P3 지원서연계

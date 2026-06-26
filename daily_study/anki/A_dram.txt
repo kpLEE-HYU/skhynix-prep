@@ -1,0 +1,23 @@
+DRAM 1T1C 셀의 구성은?	1 access transistor + 1 storage capacitor. WL=transistor gate, BL=전하 통로. 캡에 전하 유무로 0/1 저장.	dram P2
+DRAM 읽기가 '파괴적'이라는 뜻과 그 결과는?	읽으면 charge sharing으로 셀 전하가 흩어짐 → 데이터가 깨짐. 그래서 sense amp 증폭과 동시에 셀에 다시 써넣는 restore가 항상 동반된다.	dram P2
+Charge sharing이란?	WL을 켜면 셀 capacitor와 BL 기생 capacitor 사이로 전하가 나뉘며 BL에 ±수십 mV의 미세 전압 변화가 생기는 현상. sense amp 감지의 입력.	dram P2
+Sense amp 동작 4단계는?	① BL pair를 VDD/2로 precharge ② WL on ③ charge sharing으로 미세전압차 ④ cross-coupled latch가 차동 증폭해 full-rail + 셀 restore.	dram P2
+BL을 왜 VDD/2로 precharge하나?	0/1 어느 데이터든 대칭적인 신호 마진을 확보하고 차동 감지에 최적이며, 전압 swing이 절반이라 전력도 절감된다.	dram P2
+DRAM 셀 6F²→4F² 추세란?	F=최소 피처. 6F²(2F×3F)가 표준, 수직채널 transistor(VCT)+VG로 4F²(2F×2F)까지 줄여 다이 면적 약 30% 감소. 다음은 3D DRAM.	dram P2
+DRAM 노드 1a/1b/1c는?	10nm-class 4/5/6세대. 1a≈14nm, 1b≈12nm, 1c≈11nm급. 1c는 2025~26 양산, EUV 5~6 layer, 1c DDR5 8Gbps(+14% 속도/-9% 전력).	dram P2
+tRCD 정의는?	RAS-to-CAS Delay. ACTIVATE(row open)에서 READ/WRITE 명령까지의 최소 지연. WL과 sense amp가 안정되는 시간.	dram P2
+tRP 정의는?	Row Precharge time. PRECHARGE에서 다음 ACTIVATE까지. row를 닫고 BL을 VDD/2로 precharge하는 시간.	dram P2
+tRAS 정의는?	Row Active time. ACTIVATE에서 PRECHARGE까지의 최소 시간. 셀 restore가 충분히 끝나도록 보장. 너무 짧으면 데이터가 깨진다.	dram P2
+tRC와 tRAS·tRP의 관계는?	tRC(Row Cycle, 같은 bank의 ACT→다음 ACT) = tRAS + tRP. 한 row를 열고 닫는 전체 사이클.	dram P2
+CL(tCAS) 정의는?	CAS Latency. READ 명령에서 첫 데이터 출력까지의 지연으로 clock cycle 단위. random read latency ≈ tRCD + CL.	dram P2
+tWR 정의는?	Write Recovery time. 마지막 write 데이터에서 PRECHARGE까지. write 데이터가 셀에 완전히 써질 시간을 보장.	dram P2
+DRAM refresh가 왜 필요한가?	storage capacitor 전하가 누설로 사라지므로, 데이터가 깨지기 전에 주기적으로 읽고 다시 써야 함. 미세화로 저장전하가 줄어 retention이 핵심 난제.	dram P2
+DRAM retention time 표준값과 tREFI는?	retention 표준 64ms(고온 85°C 초과는 32ms). 평균 refresh 간격 tREFI ≈ 7.8µs(8192 row / 64ms).	dram P2
+DRAM에서 bank가 필요한 이유는?	독립 array인 bank마다 서로 다른 row를 동시에 open할 수 있어, activate/precharge 지연을 다른 bank 접근으로 overlap해 대역폭을 높인다.	dram P2
+Bank group(BG)이란? tCCD_L vs tCCD_S?	bank를 묶은 그룹. 같은 BG 연속접근=tCCD_L(느림, 회로 공유), 다른 BG=tCCD_S(빠름). DDR5 16Gb=8 BG×4 bank=32 bank.	dram P2
+DDR / LPDDR / GDDR / HBM 한 줄 차이는?	DDR=서버/PC 범용(DIMM). LPDDR=모바일 저전력(point-to-point). GDDR=GPU용 per-pin 초고속(~24Gbps). HBM=TSV 적층 초광대역(TB/s).	dram P2
+DDR5 on-die ECC는 왜 들어갔나?	미세 노드에서 늘어나는 single-bit 셀 불량을 칩 내부에서 보정해 수율·신뢰성 확보. 시스템 ECC(rank 단위)와는 역할이 다름.	dram P2
+DDR5 DFE의 역할은?	4-tap Decision Feedback Equalizer. 고속(최대 8800 MT/s)에서 심해지는 ISI(심볼간 간섭)를 receiver에서 보상해 신호 무결성 확보.	dram P2
+DDR5 속도 범위와 표준은?	JESD79-5C(2024.04)로 4800~8800 MT/s. 8800 MT/s에서 약 70.4 GB/s. DIMM당 독립 32-bit sub-channel 2개.	dram P2
+DRAM의 Peri(주변회로)란?	cell array 밖의 모든 회로 — row/col decoder, WL driver, sense amp, charge pump, command/address, DQ I/O. 사실상 DRAM 안의 디지털 설계 영역.	dram P2
+DRAM 미세화가 NAND보다 어려운 이유는?	sensing·retention에 필요한 셀 capacitance를 유지해야 해서, 면적을 줄이면 capacitor를 고종횡비로 길쭉하게 만들어야 하는데 제조가 극히 까다롭다.	dram P2

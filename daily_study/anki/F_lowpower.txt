@@ -1,0 +1,16 @@
+Dynamic power 공식?	P_dyn = α·C·V²·f (switching) + short-circuit power. α=activity factor. V가 제곱이라 전압 낮추기가 최강.	lowpower P1
+Static power(leakage) 구성?	V·I_leak. subthreshold(지배적) + gate tunneling + junction. 선단 공정·고온에서 급증.	lowpower P1
+Clock gating 원리?	idle FF의 clock을 enable=0일 때 차단 → clock tree 토글+FF switching 동시 절감. 가장 보편적 dynamic 절감 기법.	lowpower P1
+ICG 셀이 latch 기반인 이유?	단순 AND gating은 enable이 clock high 중 바뀌며 glitch 발생. ICG는 clock low 동안 enable을 latch로 잡아 glitch 없는 gated clock 생성.	lowpower P1
+Power gating 구조?	idle 블록과 전원 사이 sleep TR(header=PMOS→VDD, footer=NMOS→GND, MTCMOS)로 전원 차단 → leakage까지 제거. isolation+retention+전원 시퀀싱 필요.	lowpower P1
+clock gating vs power gating?	clock gating=dynamic만 줄이고 전원 켜둠(leakage 남음). power gating=leakage까지 제거하나 wake-up latency·면적·복잡도 큼.	lowpower P1
+Multi-Vt 기법?	low-Vt(빠름·leaky)는 critical path에, high-Vt(느림·저leakage)는 여유 path에 배치 → timing 지키며 leakage 절감. 합성/STA가 VT swap.	lowpower P1
+DVFS란?	워크로드 가벼울 때 V·f 동시 하향. P∝V²f라 절감 큼. 전압 낮추면 게이트 지연 늘어 주파수도 같이 낮춰야 setup 유지.	lowpower P1
+UPF란?	Unified Power Format(IEEE 1801). power domain/supply/isolation/retention/level shifter/power state를 RTL과 분리 기술. 도구 간 power intent 공유로 누락 정적 검출.	lowpower P1
+Retention flop 역할?	always-on supply의 shadow latch(balloon)에 state 보관 → 메인 전원 off 후 wake-up 시 복원.	lowpower P1
+Isolation cell 역할?	power-down 도메인 출력을 0/1로 clamp → floating/X가 켜진 도메인을 오염시키는 것 방지. 도메인 출력단에 배치.	lowpower P1
+Level shifter 역할?	서로 다른 전압의 두 도메인 사이 신호 레벨 변환(low↔high). 전압 경계마다 필요.	lowpower P1
+dynamic power 절감 우선순위?	(1) V(전압 island/DVFS, 제곱효과), (2) α·f(clock gating), (3) C(배치/buffer 최적화), (4) leakage(multi-Vt/power gating).	lowpower P1
+glitch power도 dynamic인가?	맞음. 불필요한 combinational glitch가 토글로 전력 소모. path balancing으로 감소.	lowpower P1
+short-circuit power란?	입력 전이 중 PMOS·NMOS가 동시에 켜지는 짧은 순간 VDD→GND로 흐르는 전류. 입력 transition을 빠르게 하면 감소.	lowpower P1
+선단 공정에서 leakage가 커지는 이유?	낮은 Vt + 얇은 gate oxide → subthreshold·gate tunneling leakage 증가. idle 전력 주범이라 power gating 중요.	lowpower P1

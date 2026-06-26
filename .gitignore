@@ -1,0 +1,5 @@
+# 세션 도구 상태 (Claude Code state) — 레포에 불필요
+.claude/
+
+# Windows ADS 잔여 파일
+*:Zone.Identifier

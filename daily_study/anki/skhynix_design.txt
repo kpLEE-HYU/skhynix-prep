@@ -1,0 +1,214 @@
+#separator:tab
+#html:true
+#tags column:3
+DRAM 1T1C 셀의 구성은?	1 access transistor + 1 storage capacitor. WL=transistor gate, BL=전하 통로. 캡에 전하 유무로 0/1 저장.	dram P2
+DRAM 읽기가 '파괴적'이라는 뜻과 그 결과는?	읽으면 charge sharing으로 셀 전하가 흩어짐 → 데이터가 깨짐. 그래서 sense amp 증폭과 동시에 셀에 다시 써넣는 restore가 항상 동반된다.	dram P2
+Charge sharing이란?	WL을 켜면 셀 capacitor와 BL 기생 capacitor 사이로 전하가 나뉘며 BL에 ±수십 mV의 미세 전압 변화가 생기는 현상. sense amp 감지의 입력.	dram P2
+Sense amp 동작 4단계는?	① BL pair를 VDD/2로 precharge ② WL on ③ charge sharing으로 미세전압차 ④ cross-coupled latch가 차동 증폭해 full-rail + 셀 restore.	dram P2
+BL을 왜 VDD/2로 precharge하나?	0/1 어느 데이터든 대칭적인 신호 마진을 확보하고 차동 감지에 최적이며, 전압 swing이 절반이라 전력도 절감된다.	dram P2
+DRAM 셀 6F²→4F² 추세란?	F=최소 피처. 6F²(2F×3F)가 표준, 수직채널 transistor(VCT)+VG로 4F²(2F×2F)까지 줄여 다이 면적 약 30% 감소. 다음은 3D DRAM.	dram P2
+DRAM 노드 1a/1b/1c는?	10nm-class 4/5/6세대. 1a≈14nm, 1b≈12nm, 1c≈11nm급. 1c는 2025~26 양산, EUV 5~6 layer, 1c DDR5 8Gbps(+14% 속도/-9% 전력).	dram P2
+tRCD 정의는?	RAS-to-CAS Delay. ACTIVATE(row open)에서 READ/WRITE 명령까지의 최소 지연. WL과 sense amp가 안정되는 시간.	dram P2
+tRP 정의는?	Row Precharge time. PRECHARGE에서 다음 ACTIVATE까지. row를 닫고 BL을 VDD/2로 precharge하는 시간.	dram P2
+tRAS 정의는?	Row Active time. ACTIVATE에서 PRECHARGE까지의 최소 시간. 셀 restore가 충분히 끝나도록 보장. 너무 짧으면 데이터가 깨진다.	dram P2
+tRC와 tRAS·tRP의 관계는?	tRC(Row Cycle, 같은 bank의 ACT→다음 ACT) = tRAS + tRP. 한 row를 열고 닫는 전체 사이클.	dram P2
+CL(tCAS) 정의는?	CAS Latency. READ 명령에서 첫 데이터 출력까지의 지연으로 clock cycle 단위. random read latency ≈ tRCD + CL.	dram P2
+tWR 정의는?	Write Recovery time. 마지막 write 데이터에서 PRECHARGE까지. write 데이터가 셀에 완전히 써질 시간을 보장.	dram P2
+DRAM refresh가 왜 필요한가?	storage capacitor 전하가 누설로 사라지므로, 데이터가 깨지기 전에 주기적으로 읽고 다시 써야 함. 미세화로 저장전하가 줄어 retention이 핵심 난제.	dram P2
+DRAM retention time 표준값과 tREFI는?	retention 표준 64ms(고온 85°C 초과는 32ms). 평균 refresh 간격 tREFI ≈ 7.8µs(8192 row / 64ms).	dram P2
+DRAM에서 bank가 필요한 이유는?	독립 array인 bank마다 서로 다른 row를 동시에 open할 수 있어, activate/precharge 지연을 다른 bank 접근으로 overlap해 대역폭을 높인다.	dram P2
+Bank group(BG)이란? tCCD_L vs tCCD_S?	bank를 묶은 그룹. 같은 BG 연속접근=tCCD_L(느림, 회로 공유), 다른 BG=tCCD_S(빠름). DDR5 16Gb=8 BG×4 bank=32 bank.	dram P2
+DDR / LPDDR / GDDR / HBM 한 줄 차이는?	DDR=서버/PC 범용(DIMM). LPDDR=모바일 저전력(point-to-point). GDDR=GPU용 per-pin 초고속(~24Gbps). HBM=TSV 적층 초광대역(TB/s).	dram P2
+DDR5 on-die ECC는 왜 들어갔나?	미세 노드에서 늘어나는 single-bit 셀 불량을 칩 내부에서 보정해 수율·신뢰성 확보. 시스템 ECC(rank 단위)와는 역할이 다름.	dram P2
+DDR5 DFE의 역할은?	4-tap Decision Feedback Equalizer. 고속(최대 8800 MT/s)에서 심해지는 ISI(심볼간 간섭)를 receiver에서 보상해 신호 무결성 확보.	dram P2
+DDR5 속도 범위와 표준은?	JESD79-5C(2024.04)로 4800~8800 MT/s. 8800 MT/s에서 약 70.4 GB/s. DIMM당 독립 32-bit sub-channel 2개.	dram P2
+DRAM의 Peri(주변회로)란?	cell array 밖의 모든 회로 — row/col decoder, WL driver, sense amp, charge pump, command/address, DQ I/O. 사실상 DRAM 안의 디지털 설계 영역.	dram P2
+DRAM 미세화가 NAND보다 어려운 이유는?	sensing·retention에 필요한 셀 capacitance를 유지해야 해서, 면적을 줄이면 capacitor를 고종횡비로 길쭉하게 만들어야 하는데 제조가 극히 까다롭다.	dram P2
+HBM을 쓰는 이유는?	AI/HPC의 병목은 메모리 대역폭(memory wall). HBM은 초광대역 I/O를 moderate 클럭으로 굴려 bit당 에너지 최저 + 대역폭 최고 + 패키지 내 집적을 동시에 달성.	hbm P2
+TSV란?	Through-Silicon Via. DRAM die를 수직 관통하는 구리 via로, 적층된 die들을 위아래로 잇는 전기 통로. die 사이는 micro-bump로 접합.	hbm P2
+HBM base(logic) die의 역할은?	스택 최하단 die로 외부 인터페이스·테스트·전력 분배 담당. 2.5D 인터포저로 GPU와 연결. HBM4부터 커스텀 로직을 넣어 로직 파운드리 공정으로 제작.	hbm P2
+HBM 대역폭 공식은?	대역폭 = I/O 폭 × per-pin 데이터 속도 ÷ 8(byte 환산).	hbm P2
+HBM3 대역폭 계산은?	1024-bit × 6.4Gbps ÷ 8 = 819 GB/s (per stack).	hbm P2
+HBM3E 대역폭 계산은?	1024-bit × 9.6Gbps ÷ 8 ≈ 1.23 TB/s (per stack).	hbm P2
+HBM4 대역폭 계산은?	2048-bit × 8Gbps(JEDEC) ÷ 8 = 2.0 TB/s. SK하이닉스 10Gbps → 약 2.5 TB/s.	hbm P2
+HBM3E 핵심 스펙은?	1024-bit IO, 9.2~9.6 Gbps/pin, 12-Hi=36GB(12×3GB), ≈1.2 TB/s/stack. SK하이닉스 세계 첫 12-Hi 36GB 양산, 16-Hi 48GB 샘플.	hbm P2
+HBM4의 가장 큰 변화는?	I/O 폭이 1024→2048-bit로 2배(2015년 이후 처음). 독립 채널 16→32(채널당 pseudo-channel 2개). base die를 로직 파운드리 공정으로 제작.	hbm P2
+HBM4 JEDEC 확정 시점과 양산 시기는?	JEDEC JESD270-4가 2025년 4월 확정. 2026년 양산(SK하이닉스 개발 완료, 삼성 2026.02 양산 발표). 엔비디아 Vera Rubin용.	hbm P2
+HBM4 per-pin 속도와 용량은?	JEDEC 기준 8Gbps(2.0TB/s), SK하이닉스 10Gbps(약 2.5TB/s+, JEDEC 대비 25%↑). 16-Hi=48GB.	hbm P2
+HBM 스택 8/12/16-Hi란?	die를 8/12/16층 적층한 것. 같은 높이에 더 쌓으려 die를 40% 박형화. 층수↑ = 용량↑, but warpage·발열·TSV 정렬 난도↑.	hbm P2
+SK하이닉스 HBM 시장 위상은?	2025 HBM 점유 약 52%로 1위, HBM4(2026) ~54% 전망. 엔비디아 HBM의 약 90% 공급, HBM4 물량 약 2/3(70%에 근접) 선점.	hbm P2
+HBM과 AI 가속기(GPU)의 관계는?	GPU 연산엔진이 데이터를 굶지 않게 HBM이 2.5D 인터포저에서 TB/s급 대역폭 공급. 용량(GB)=모델 크기 한계, 대역폭(TB/s)=토큰 throughput 한계.	hbm P2
+HBM4가 속도보다 I/O 폭을 키운 이유는?	per-pin 속도를 더 올리면 SI·전력 한계에 부딪힘. 폭을 2배로 늘리는 게 같은 대역폭을 더 낮은 에너지로 내는 길.	hbm P2
+HBM의 단점은?	TSV·인터포저·스택 본딩으로 공정 난도·원가·발열이 높고 수율 확보가 어렵다.	hbm P2
+HBM4 base die를 로직 파운드리에서 만드는 이유는?	고속 인터페이스·연산 로직은 로직 공정이 유리. SK하이닉스는 TSMC와 협업해 base die 제작.	hbm P2
+2.5D 패키징이란?	GPU die와 HBM 스택을 실리콘 인터포저 위에 나란히 올려 짧고 넓은 배선으로 연결하는 방식. 3D(수직적층)와 구분.	hbm P2
+HBM에서 용량과 대역폭은 무엇으로 결정되나?	용량(GB)=die 적층 수×die 용량(12-Hi×3GB=36GB). 대역폭(TB/s)=IO폭×per-pin속도÷8. 두 축을 분리해서 본다.	hbm P2
+HBM 대역폭에서 폭 vs 속도 trade-off는?	광폭은 같은 대역폭을 낮은 per-pin 클럭으로 내 SI·전력 유리하나 인터포저 배선·base die 복잡도↑. 협폭 고속은 DFE 등화 필요. SerDes 설계와 동일.	hbm P2
+NAND가 데이터를 저장하는 원리는?	transistor 게이트 아래 전하저장층에 전자를 가둬 문턱전압(Vt)을 이동시켜 0/1 저장. 전원이 꺼져도 유지=비휘발성.	nand P2
+Floating Gate vs Charge Trap(CTF) 차이는?	FG=도체 poly에 전하 연속 저장(셀간 간섭 큼). CTF=절연체 Si₃N₄ trap에 전하를 이산 포획(간섭↓, 결함에 강함). 3D NAND는 CTF.	nand P2
+3D NAND가 CTF를 쓰는 이유는?	CTF는 cell-to-cell 간섭이 작고 국소 oxide 결함에 강하며 구조가 단순해 수직 적층에 유리하기 때문.	nand P2
+F-N 터널링이란?	Fowler-Nordheim 터널링. 고전계로 얇은 oxide를 전자가 통과. Program=전하 주입(Vt↑), Erase=전하 제거(Vt↓).	nand P2
+NAND의 read/program/erase 단위는?	read·program=page 단위, erase=block 단위. 제자리 덮어쓰기 불가 → 새 page에 쓰고 옛 block을 통째 erase.	nand P2
+NAND가 제자리 덮어쓰기가 안 되는 영향은?	write amplification과 garbage collection 오버헤드 발생 → over-provisioning과 wear leveling이 필요. FTL이 이를 관리.	nand P2
+SLC/MLC/TLC/QLC란?	셀당 저장 bit 수. SLC=1bit(2레벨), MLC=2bit(4), TLC=3bit(8), QLC=4bit(16레벨). bit↑=밀도·저가↑, but 마진·속도·수명↓, ECC 부담↑.	nand P2
+SLC/MLC/TLC/QLC P/E cycle 수명은?	SLC ~100k, MLC ~3k~10k, TLC ~1k~3k, QLC ~수백~1k. 터널링이 oxide를 누적 열화시켜 횟수가 제한됨.	nand P2
+QLC는 어디에 적합한가?	읽기 위주·대용량 저가 저장(아카이브, read-intensive). 좁은 마진·낮은 수명으로 쓰기 많은 곳엔 부적합.	nand P2
+3D NAND란?	평면 미세화 한계로 셀을 수직 적층한 구조. 게이트 층을 쌓은 뒤 channel hole을 위→아래로 etch하고 그 벽에 CTF 셀 형성.	nand P2
+NAND에서 string이란?	하나의 channel hole에 수직으로 직렬 연결된 셀들의 묶음. 고단수는 string stacking으로 나눠 쌓는다.	nand P2
+3D NAND 최신 단수(2025)는?	SK하이닉스 321단 양산(2025), 삼성 286단(9세대). 400단+ 개발 중(SK하이닉스 2025말, 삼성 10세대 V-NAND 400+).	nand P2
+고단수 3D NAND에 hybrid bonding을 쓰는 이유는?	깊은 channel hole의 고종횡비 etch와 적층 응력이 한계라, peri를 별도 wafer로 만들어 cell array에 본딩(CMOS-bonded-array)해 단수를 늘림.	nand P2
+Read disturb란?	한 page 읽기 시 같은 string 비선택 셀에 pass 전압(Vpass)을 거는데, 반복되면 약한 전하 주입으로 Vt가 올라가 bit가 뒤집히는 현상.	nand P2
+Read disturb 대응은?	강력한 ECC로 정정 + 누적 read 횟수가 임계를 넘으면 데이터를 옮겨쓰는 read reclaim(read-disturb-aware refresh)을 컨트롤러가 수행.	nand P2
+Wear leveling이란?	FTL이 write를 전체 block에 고르게 분산해 특정 block이 먼저 마모되는 것을 방지하는 기법.	nand P2
+NAND에서 ECC가 중요한 이유는?	P/E·retention·read disturb로 bit 오류가 늘어남. LDPC 같은 강력한 ECC로 정정해야 신뢰성 확보. QLC일수록 raw BER↑로 부담 큼.	nand P2
+NAND 컨트롤러(FTL)가 하는 일은?	wear leveling + LDPC ECC + garbage collection + read reclaim + bad block 관리로 소자의 비신뢰성을 신뢰성 있는 저장장치로 변환.	nand P2
+NAND 미세화 방식이 DRAM과 다른 점은?	DRAM은 평면 미세화(capacitor 종횡비 문제), NAND는 Z축 적층(300단+). 같은 집적도를 다른 물리 축으로 푼다.	nand P2
+메타스터빌리티란?	setup/hold 위반 시 FF 출력이 0/1 사이 불확정 상태로 떠 있다가 확률적으로 resolve되는 현상.<br>비동기 도메인 경계에선 sampling 타이밍을 보장 못 해 필연적으로 발생 → 확률(MTBF)로 관리.	cdc P1
+CDC에서 메타스터빌리티를 0으로 못 만드는 이유?	송신 데이터와 수신 clock이 위상 무관이라 언젠가 반드시 setup/hold 윈도우 안에서 변함. 동기 도메인은 STA로 정적 보장되지만 비동기 경계는 불가능.	cdc P1
+MTBF 공식?	MTBF = e^(t_r/τ) / (T0·f_c·f_d).<br>t_r=resolve 허용시간, τ=resolution 시정수(~20-50ps), T0=metastability window, f_c=sampling clock, f_d=입력 toggle rate.	cdc P1
+MTBF를 개선하는 방법?	(1) FF 단수 추가(2→3단)로 t_r 증가, (2) sampling clock을 늦춤.<br>둘 다 t_r을 늘려 MTBF가 지수적으로 개선. 고주파일수록 f_c·f_d 커져 MTBF 악화.	cdc P1
+2-FF 동기화기 동작 원리?	수신 도메인 FF 2단 직렬. 1단이 metastable 돼도 2단 캡처 전 거의 한 주기 동안 resolve. 2단 metastable 확률이 지수적으로 감소.<br>단 1-bit·level 신호 전용.	cdc P1
+2-FF 동기화기 두 FF 사이에 로직을 넣으면?	금지. 1단의 resolve 시간을 갉아먹어 MTBF가 깨짐. 반드시 back-to-back 배치.	cdc P1
+멀티비트를 비트별 2-FF로 동기화하면 위험한 이유?	bit skew: 비트마다 도착·resolve 시각이 달라 동기화 순간 존재하지 않은 중간 조합값이 보임(data coherency 깨짐). 예: 0111→1000 중 0000/1111이 순간 보임.	cdc P1
+다비트 CDC의 안전한 방법 4가지?	(1) Gray code, (2) async FIFO, (3) req/ack handshake, (4) MUX-recirculation(enable만 동기화+데이터 hold).	cdc P1
+Gray code가 CDC에 유용한 이유?	인접 값이 딱 1비트만 변함 → skew 있어도 옛값/새값만 보이고 invalid 중간값 없음. 메타 위험 비트도 1개뿐. FIFO 포인터에 사용.	cdc P1
+비동기 FIFO 구조?	dual-port RAM + wr_ptr(쓰기도메인)/rd_ptr(읽기도메인). 각 포인터를 Gray 변환→반대 도메인 2-FF 동기화→비교로 full/empty 생성. 포인터 n+1 bit(MSB=wrap)로 full/empty 구별.	cdc P1
+async FIFO full/empty 판정이 보수적인 이유?	동기화 latency로 상대 포인터가 과거값으로 보임 → 실제보다 더 full/empty로 판단 → overflow/underflow 절대 안 나는 안전한 pessimism.	cdc P1
+req/ack 4-phase handshake 흐름?	송신 데이터 안정+req=1 → 수신 req 동기화·캡처 후 ack=1 → 송신 ack 동기화 후 req=0 → 수신 ack=0. 데이터는 false-path. robust하지만 round-trip으로 느림.	cdc P1
+handshake 2-phase vs 4-phase?	2-phase=레벨 toggle로 왕복당 1전송, 빠르나 상태추적 필요. 4-phase=매번 0복귀, 단순·robust.	cdc P1
+MUX-recirculation(data-hold) 기법?	다비트 데이터는 동기화 안 하고 MUX 입력에 유지, enable 1-bit만 동기화. enable 없으면 캡처 FF가 자기값 recirculate, enable 시에만 load. 데이터는 false-path.	cdc P1
+shadow register란?	본 레지스터 옆 그림자 레지스터를 두고 valid 펄스 동기화 시점에 한꺼번에 복사해 다비트 일관성 보장. MUX-recirculation 계열.	cdc P1
+빠른→느린 도메인 1-cycle 펄스가 유실되는 이유와 해결?	펄스 폭이 수신 주기보다 좁으면 sampling 못 해 유실. 해결=toggle 동기화기: 펄스마다 레벨 toggle→2-FF 동기화→edge detect(XOR)로 펄스 복원.	cdc P1
+reconvergence 위험이란?	한 소스에서 갈라져 따로 동기화된 신호들이 재합류할 때 도착 cycle 차이로 glitch/불일치 발생. 한 번만 동기화 후 fan-out하거나 gray/handshake로 회피.	cdc P1
+quasi-static 신호란?	거의 변하지 않는 신호(설정값 등). static처럼 다루되 바뀌는 순간엔 stable-when-sampled 보장 필요. STA에선 false-path 처리.	cdc P1
+CDC에서 false path란?	비동기 crossing 데이터 버스·recirculation 데이터처럼 STA로 타이밍을 잡지 않는 경로. set_false_path로 제외하되 CDC 도구로 동기화기 존재를 구조 검증해야 함.	cdc P1
+CDC 정적 검증 sign-off 구성요소?	(1) 구조검증: crossing 탐지+동기화기/gray 구조 확인, (2) 기능검증: 프로토콜·data-stability SVA, (3) RDC, (4) 근거 있는 waiver. 도구=SpyGlass/Questa/VC CDC.	cdc P1 지원서연계
+CDC waiver 남발의 위험과 관리?	진짜 버그를 숨김. reason-coded·리뷰·버전관리하고 자동화로 신규 vs 기존 waiver를 구분해 회귀 차단.	cdc P1 지원서연계
+SFR/CSR 설정값을 HW로 넘기는 CDC 방법?	quasi-static·독립비트=각 비트 2-FF+false-path. 다비트가 한꺼번에 의미=config update 펄스를 동기화 후 전체 비트 MUX-load 또는 shadow register 복사. SW가 enable을 마지막에 set하는 순서 강제.	cdc P1 지원서연계
+HW status(다비트)를 SW가 읽을 때 동기화?	capture-and-hold 후 valid 펄스 동기화로 한 스냅샷을 읽게 함. 메모리 PHY training 파라미터 설정 path가 전형적 SFR→PHY-clock CDC.	cdc P1 지원서연계
+setup time 정의?	데이터가 clock edge 이전 t_su 동안 안정해야 한다는 제약. 위반 시 메타. 가장 느린(max delay) path가 결정.	sta P1
+hold time 정의?	데이터가 clock edge 이후 t_h 동안 안정해야 한다는 제약. 가장 빠른(min delay) path가 결정.	sta P1
+Setup slack 식?	Setup slack = T_clk + skew − (t_cq + t_comb_max + t_su). 음수면 path가 너무 느림. clock 늦추면 해결.	sta P1
+Hold slack 식?	Hold slack = (t_cq + t_comb_min) − (t_h + skew). 주기와 무관. clock 늦춰도 안 풀림 → buffer/delay 추가로 fix.	sta P1
+setup과 hold 중 더 위험한 위반은?	Hold. 주기 무관이라 clock을 늦춰도 안 풀리고 silicon에서 발견되면 chip이 죽음. Setup은 주파수 낮추면 임시 회피 가능.	sta P1
+slack 정의?	slack = required time − arrival time. 양수=마진 만족, 음수=위반. WNS=worst negative slack, TNS=총합.	sta P1
+clock skew란?	같은 clock이 launch FF와 capture FF에 도착하는 공간적(정적) 시각 차이. useful skew는 setup 도움/hold 악화.	sta P1
+clock jitter란?	같은 지점에서 clock edge가 시간적으로(동적) 흔들리는 변동(cycle-to-cycle). 원인=PLL/DLL, 전원노이즈, crosstalk.	sta P1
+clock uncertainty를 setup/hold에 어떻게 적용?	uncertainty=skew+jitter+margin. setup 체크엔 빼고(available time 감소), hold 체크엔 더함(pessimism).	sta P1
+false path란?	실제 데이터가 전파 안 되거나 타이밍 잡을 필요 없는 경로(비동기 crossing, mutually exclusive MUX, 정적 config). set_false_path로 제외.	sta P1
+multicycle path란?	데이터가 N cycle에 한 번만 캡처되면 되는 경로. set_multicycle_path N으로 setup 완화. hold MCP도 함께 설정해야 hold 안 깨짐.	sta P1
+OCV(On-Chip Variation)란?	같은 chip 안에서도 위치별 P/V/T가 달라 셀 지연이 다른 현상. launch는 느리게/capture는 빠르게 derate 곱해 worst를 봄.	sta P1
+AOCV/POCV란?	단순 OCV의 과도 pessimism을 줄이는 기법. AOCV=path 깊이별 변동 평균화, POCV=셀별 통계분포(statistical) 사용.	sta P1
+setup/hold가 worst인 corner는?	setup은 slow corner(SS/저전압/고온), hold는 fast corner(FF/고전압/저온). MCMM으로 다수 corner·mode 검증.	sta P1
+recovery time이란?	비동기 reset 해제(deassert)가 clock edge 이전 일정시간 안정해야 하는 체크. setup과 유사.	sta P1
+removal time이란?	비동기 reset이 clock edge 이후 일정시간 유지돼야 하는 체크. hold와 유사. 위반 시 reset 해제 순간 메타.	sta P1
+reset synchronizer가 필요한 이유?	async assert/sync deassert. 모든 FF가 같은 edge에 동시에 reset 해제되게 해 recovery/removal·메타 방지. RDC와 연결.	sta P1
+timing closure란?	합성~배치배선 후 남은 setup/hold/transition/DRV 위반을 반복 수정해 모든 corner·mode에서 slack≥0을 만드는 과정.	sta P1 지원서연계
+ECO란?	배치배선을 크게 안 흔들고 셀 resize/buffer 삽입/VT swap/reroute로 국소 수정. setup ECO=upsize, hold ECO=buffer 삽입.	sta P1 지원서연계
+sign-off STA 도구와 포함요소?	Synopsys PrimeTime. SI crosstalk delay, POCV, noise 포함해 최종 timing sign-off.	sta P1 지원서연계
+Dynamic power 공식?	P_dyn = α·C·V²·f (switching) + short-circuit power. α=activity factor. V가 제곱이라 전압 낮추기가 최강.	lowpower P1
+Static power(leakage) 구성?	V·I_leak. subthreshold(지배적) + gate tunneling + junction. 선단 공정·고온에서 급증.	lowpower P1
+Clock gating 원리?	idle FF의 clock을 enable=0일 때 차단 → clock tree 토글+FF switching 동시 절감. 가장 보편적 dynamic 절감 기법.	lowpower P1
+ICG 셀이 latch 기반인 이유?	단순 AND gating은 enable이 clock high 중 바뀌며 glitch 발생. ICG는 clock low 동안 enable을 latch로 잡아 glitch 없는 gated clock 생성.	lowpower P1
+Power gating 구조?	idle 블록과 전원 사이 sleep TR(header=PMOS→VDD, footer=NMOS→GND, MTCMOS)로 전원 차단 → leakage까지 제거. isolation+retention+전원 시퀀싱 필요.	lowpower P1
+clock gating vs power gating?	clock gating=dynamic만 줄이고 전원 켜둠(leakage 남음). power gating=leakage까지 제거하나 wake-up latency·면적·복잡도 큼.	lowpower P1
+Multi-Vt 기법?	low-Vt(빠름·leaky)는 critical path에, high-Vt(느림·저leakage)는 여유 path에 배치 → timing 지키며 leakage 절감. 합성/STA가 VT swap.	lowpower P1
+DVFS란?	워크로드 가벼울 때 V·f 동시 하향. P∝V²f라 절감 큼. 전압 낮추면 게이트 지연 늘어 주파수도 같이 낮춰야 setup 유지.	lowpower P1
+UPF란?	Unified Power Format(IEEE 1801). power domain/supply/isolation/retention/level shifter/power state를 RTL과 분리 기술. 도구 간 power intent 공유로 누락 정적 검출.	lowpower P1
+Retention flop 역할?	always-on supply의 shadow latch(balloon)에 state 보관 → 메인 전원 off 후 wake-up 시 복원.	lowpower P1
+Isolation cell 역할?	power-down 도메인 출력을 0/1로 clamp → floating/X가 켜진 도메인을 오염시키는 것 방지. 도메인 출력단에 배치.	lowpower P1
+Level shifter 역할?	서로 다른 전압의 두 도메인 사이 신호 레벨 변환(low↔high). 전압 경계마다 필요.	lowpower P1
+dynamic power 절감 우선순위?	(1) V(전압 island/DVFS, 제곱효과), (2) α·f(clock gating), (3) C(배치/buffer 최적화), (4) leakage(multi-Vt/power gating).	lowpower P1
+glitch power도 dynamic인가?	맞음. 불필요한 combinational glitch가 토글로 전력 소모. path balancing으로 감소.	lowpower P1
+short-circuit power란?	입력 전이 중 PMOS·NMOS가 동시에 켜지는 짧은 순간 VDD→GND로 흐르는 전류. 입력 transition을 빠르게 하면 감소.	lowpower P1
+선단 공정에서 leakage가 커지는 이유?	낮은 Vt + 얇은 gate oxide → subthreshold·gate tunneling leakage 증가. idle 전력 주범이라 power gating 중요.	lowpower P1
+동기 설계가 주류인 이유?	모든 FF가 공통 clock → STA로 setup/hold 정적 검증 가능, 타이밍 예측 가능. 비동기는 빠르나 race·hazard 많고 검증 도구 약함. 도메인 경계만 CDC로 처리.	digital P1
+Moore FSM 특징?	출력이 현재 state에만 의존. registered라 glitch 없고 안정적이나 입력 반영에 1 clock 더 걸림.	digital P1
+Mealy FSM 특징?	출력이 state+현재 입력에 의존. 적은 state로 빠른 반응이나 입력 조합경로가 출력에 직접 연결돼 glitch 위험. 절충=registered Mealy.	digital P1
+FSM state encoding 선택 기준?	one-hot=빠름·디코딩 간단(FPGA/고속), binary=FF 적음, gray=인접 전이 1비트(저전력·CDC 카운터).	digital P1
+Pipelining이 개선하는 것?	조합 경로를 register stage로 분할 → clock 주파수=throughput↑. 한 데이터 latency는 유지/증가하나 단위시간당 처리량 증가.	digital P1
+Pipeline hazard 3종?	구조적(자원 충돌), 데이터(주로 RAW), 제어(branch). 해결=forwarding/bypass, stall/bubble, branch prediction.	digital P1
+파이프라인 stage를 무한히 늘리면?	register overhead(t_cq+setup)와 hazard penalty 증가로 성능·전력 손해. 최적 깊이 존재.	digital P1
+async reset 특징?	clock 무관 즉시 assert. 단 해제(deassert)가 edge 근처면 recovery/removal 위반→메타 위험.	digital P1
+sync reset 특징?	clock edge에서만 동작. 타이밍 깨끗하나 running clock 필요, reset 폭이 한 주기 이상이어야.	digital P1
+reset synchronizer란?	async assert/sync deassert. reset을 즉시 걸되 해제는 2-FF 동기화해 모든 FF가 같은 edge에 동시에 풀리게 함.	digital P1
+RDC(Reset Domain Crossing)란?	서로 다른 reset 도메인 간 경로. reset assert/deassert가 capture clock과 비동기면 메타 → CDC와 동일 원리로 검증.	digital P1
+시뮬 통과 RTL이 합성 후 달라지는 원인?	(1) incomplete sensitivity list, (2) 의도치 않은 latch 추론, (3) blocking/non-blocking 오용 race, (4) 비합성 구문(initial/delay). lint+LEC로 차단.	digital P1
+의도치 않은 latch는 언제 추론되나?	combinational always의 if/case에서 일부 경로에 대입 누락 → 값 유지 위해 합성기가 latch 생성. 모든 경로 대입 or default로 방지.	digital P1
+RTL↔netlist 동치는 어떻게 검증?	Equivalence Check(LEC, formal). 합성·ECO 후 기능 동일성을 정적 증명. lint·CDC와 함께 sign-off.	digital P1
+glitch가 위험한 곳은?	clock·reset·async set/clear·CDC enable 등 edge/level로 직접 동작하는 입력. 동기 FF 데이터 입력엔 edge에서 안정값만 캡처돼 무해. gated clock은 ICG 사용.	digital P1
+fan-out이 크면 생기는 문제와 해결?	출력 transition·지연 증가로 setup·SI 악화. buffer/inverter tree로 부하 분산, max fan-out/transition 제약. clock/reset은 전용 tree(CTS).	digital P1
+SRAM 메모리 컴파일러란?	표준셀이 아닌 컴파일러가 원하는 깊이·폭의 SRAM(6T bitcell) 매크로 생성, .lib/.lef/모델 제공. 설계자는 hard macro로 인스턴스화 후 peri 로직·BIST 부착.	digital P1
+DRAM과 SRAM 매크로 구도 차이?	DRAM=1T1C cell+sense amp(refresh 필요), SRAM=6T(refresh 불필요). 둘 다 "컴파일/생성된 매크로+peri 디지털" 구도는 동일.	digital P1
+UVM 계층 구조?	test → env → agent(sequencer+driver+monitor) → scoreboard. sequence/sequence_item, phase(build/connect/run), factory·config_db·TLM으로 재사용.	verif P1
+UVM driver 역할?	sequencer가 준 sequence item을 interface 통해 DUT 핀으로 구동.	verif P1
+UVM monitor 역할?	DUT 핀을 수동 관찰해 transaction을 복원 → scoreboard/coverage로 전달.	verif P1
+UVM sequencer 역할?	sequence들을 arbitration해 transaction item을 driver로 전달.	verif P1
+UVM scoreboard 역할?	DUT 출력(monitor 복원값)을 reference model 기대값과 비교해 pass/fail 판정.	verif P1
+UVM active vs passive agent?	active=sequencer+driver로 구동까지, passive=monitor만 둬 관찰·coverage 전용(다른 곳이 구동할 때).	verif P1
+SVA란?	SystemVerilog Assertion. 설계가 지킬 시간적/논리적 속성을 선언적으로 기술해 시뮬·formal로 검증. 버그를 내부에서 즉시 포착.	verif P1
+immediate vs concurrent assertion?	immediate=절차코드 내 그 순간 조건 즉시 체크(조합). concurrent=clock 동기, 여러 cycle 걸친 sequence/property 검증.	verif P1
+SVA implication |-> 와 |=> 차이?	a |-> b = 같은 cycle에 b 성립, a |=> b = 다음 cycle에 b 성립.	verif P1
+code coverage란?	RTL의 line/branch/condition/toggle/FSM이 실제 실행됐는지 보는 구조적 지표. 도구가 자동 추출.	verif P1
+functional coverage란?	설계 의도(시나리오·corner·교차조건)가 일어났는지 covergroup/coverpoint/cross로 측정. 설계자가 정의.	verif P1
+code coverage 100%면 검증 끝?	아님. 특정 조합 시나리오를 안 만들면 기능 hole 잔존. functional coverage도 봐야. coverage≠정확성(checker/assertion이 보장).	verif P1
+constrained random이 directed보다 좋은 점?	제약 내 랜덤 자극으로 사람이 못 생각한 corner까지 자동 도달. coverage 피드백으로 효율 수렴. 옳고 그름은 scoreboard가 판단.	verif P1
+검증 수렴(coverage sign-off) 기준?	code+functional coverage 목표 도달 + 모든 assertion pass + regression green + 남은 hole 분석/waiver(unreachable 입증).	verif P1
+DV vs DFT?	DV=설계가 사양대로 올바른가(기능 검증, 시뮬/formal). DFT=제조 chip의 결함을 test할 수 있게 설계(scan/ATPG/BIST).	verif P1
+scan chain이란?	일반 FF를 scan FF로 바꿔 shift chain 연결. 임의 상태 주입/관찰로 controllability·observability 확보.	verif P1
+ATPG란?	Auto Test Pattern Generation. stuck-at(0/1 고착)·transition(천이지연)·bridging fault model로 결함 검출 패턴 자동 생성.	verif P1
+MBIST란?	Memory BIST. on-chip에서 march 알고리즘(0/1 write-read 패턴)으로 메모리 cell·sense·decoder 결함을 자가 진단. 핀으로 직접 못 보는 메모리용.	verif P1
+redundancy/repair(BISR)란?	여분 spare row/column을 두고 결함 주소를 spare로 재매핑(BISR). 일부 불량 cell이 있어도 chip을 살려 yield↑. e-fuse로 영구(hard) 또는 부팅 시 soft repair.	verif P1
+DRAM에서 DFT 비중이 큰 이유?	array 결함률이 높아 MBIST+BISR가 yield를 좌우. spare row/col·BISR이 메모리 표준.	verif P1
+MOSFET cutoff 영역?	V_GS < V_th → 채널 없음, I_D≈0(실제론 지수적 subthreshold leakage). overdrive V_ov=V_GS−V_th.	circuit P1
+MOSFET triode/linear 영역과 식?	V_GS>V_th, V_DS<V_ov. I_D=μC_ox(W/L)[(V_GS−V_th)V_DS−V_DS²/2]. V_DS에 거의 비례, 저항처럼 동작.	circuit P1
+MOSFET saturation 영역과 식?	V_GS>V_th, V_DS≥V_ov. drain쪽 pinch-off. I_D=½μC_ox(W/L)(V_GS−V_th)²(1+λV_DS). V_DS 거의 무관한 정전류(λ=채널길이변조).	circuit P1
+디지털 게이트에서 MOS는 주로 어느 영역?	스위칭 중 saturation 거쳐 ON 정착 시 triode(낮은 R_on), OFF는 cutoff. 아날로그 증폭은 saturation 바이어스.	circuit P1
+CMOS 인버터 정적전류가 0에 가까운 이유?	입력 0/1 정상상태에서 PMOS·NMOS 중 하나가 항상 OFF → VDD→GND DC 경로 없음. 전력은 switching+leakage에서만 발생.	circuit P1
+CMOS 인버터 전이 순간의 전류?	입력이 V_th~VDD−|V_tp| 사이일 때 둘 다 잠깐 ON → short-circuit current. 빠른 transition으로 최소화.	circuit P1
+Leakage 종류 3가지?	(1) subthreshold(V_GS<V_th, weak inversion, exp, ~60mV/dec), (2) gate tunneling(얇은 oxide), (3) junction/GIDL. 온도·미세공정에서 급증.	circuit P1
+Short Channel Effect란?	L 축소 시 V_th roll-off, DIBL(drain이 barrier 낮춤), velocity saturation, hot carrier. leakage·변동 증가.	circuit P1
+DRAM sense amplifier 원리?	cell capacitor가 precharge된(VDD/2) bitline과 charge sharing→미소 ΔV(수십mV). cross-coupled inverter latch가 양의 피드백으로 full rail 증폭. read는 destructive→write-back(restore).	circuit P1
+DRAM bitline을 VDD/2로 precharge하는 이유?	0/1 양방향 미소 신호를 대칭으로 감지하고 전력·속도 최적화(open/folded bitline 구조).	circuit P1
+DRAM read가 destructive인 이유?	sense 과정에서 cell의 저장 charge가 소모됨 → 증폭된 값을 다시 cell에 쓰는 write-back(restore)이 동작에 포함.	circuit P1
+차동증폭기를 쓰는 이유?	두 입력의 차만 증폭, common mode(전원노이즈·drift) 억제(높은 CMRR). 노이즈 내성↑. sense amp·op-amp 입력단·IO 수신기 기반.	circuit P1
+CMRR이란?	(차동이득)/(공통모드이득). 클수록 두 입력 공통 노이즈를 잘 제거.	circuit P1
+PLL 구성과 특징?	phase detector+charge pump+loop filter+VCO+divider. 주파수 체배/합성 가능. VCO가 발진기라 jitter 누적.	circuit P1
+DLL 구성과 특징?	phase detector+전압제어 지연선(delay line). 위상만 정렬(체배 X, 출력f=입력f). 발진기 없어 jitter 누적 적고 안정.	circuit P1
+DDR에서 DLL을 쓰는 이유?	출력 DQ/DQS를 외부 clock에 정렬해 skew를 줄이고 data eye 확보. 주파수 체배 불필요하고 위상정렬만 필요하므로 DLL.	circuit P1
+crosstalk란?	인접 net 간 용량·유도 결합. victim에 noise glitch 유기, aggressor 동시천이로 실효 결합용량 변해 지연 빨라짐/느려짐. PrimeTime SI가 반영.	circuit P1
+IR drop이란?	전원/접지망 저항에 전류가 흘러 국소 전압 강하 → 셀이 느려지거나 오동작. di/dt 노이즈·EM과 함께 power integrity 문제. decap·grid 강화로 대응.	circuit P1
+HBM에서 SI/PI가 중요한 이유?	TSV·interposer로 초고밀도·고속 → crosstalk·IR drop·전원노이즈가 동작 속도를 좌우. DQS 정렬(DLL)과 함께 타이밍 마진 결정.	circuit P1
+반도체 3대 단위공정의 흐름은?	증착(Deposition, 막 형성: CVD/ALD/PVD) → 포토(Litho, resist 도포→노광→현상으로 패턴 전사) → 에칭(Etch, 불필요부 제거). 이 cycle을 수백 번 반복.	process P3
+GDS layer와 마스크의 관계는?	레이아웃의 각 layer가 곧 마스크 한 장에 대응. 설계한 회로가 물리적 마스크와 공정 step으로 번역된다.	process P3
+EUV란?	파장 13.5nm 극자외선 노광. ArF(193nm) 대비 멀티패터닝 횟수를 줄여 미세 패턴을 한 번에 형성. DRAM 1a 노드부터 본격 도입.	process P3
+High-NA EUV란?	같은 13.5nm 파장이되 렌즈 개구수 NA를 0.33→0.55로 키워 해상도를 높인 것. sub-10nm급 차세대 노드용.	process P3
+EUV의 비용·난점은?	장비가 극도로 비싸고 광원 power·반사형 마스크·pellicle·throughput이 과제. 그래서 꼭 필요한 layer에만 선택적으로 사용.	process P3
+스케일링(미세화)이란?	최소 피처 F를 줄여 같은 면적에 더 많은 소자를 넣는 것. 밀도·원가·성능 개선. 물리·SI·열 한계에 점점 부딪힘.	process P3
+DRAM 미세화의 핵심 난제는?	capacitor 종횡비. sensing·retention에 필요한 셀 capacitance를 유지하려고 캡을 길쭉하게(종횡비 100:1 이상) 세워야 해 제조·기계적 안정성이 극히 어렵다.	process P3
+NAND 미세화 방식은?	평면 미세화를 포기하고 셀을 Z축으로 적층(300단+). 난제는 미세 패터닝이 아니라 깊은 channel hole의 고종횡비 etch와 균일도.	process P3
+DRAM과 NAND 미세화의 차이를 한 줄로?	DRAM=평면 capacitor 종횡비, NAND=수직 적층. 같은 집적도 향상을 다른 물리 축으로 푼다.	process P3
+수율(yield)이란?	웨이퍼에서 만든 die 중 정상 동작 양품의 비율. 결함 밀도·공정 산포가 낮을수록 높다.	process P3
+메모리가 로직보다 수율 구제가 쉬운 이유는?	셀이 규칙적으로 반복되는 array 구조라, 여분 회로(redundancy)로 불량 위치를 재매핑해 양품으로 살릴 수 있다.	process P3
+Redundancy/repair의 구성요소는?	spare row/column(DRAM)·spare block/plane(NAND)을 미리 넣고, 테스트로 불량 주소를 찾아 fuse(laser/e-fuse)로 spare에 재매핑.	process P3
+Repair는 어떻게 동작하나?	BIST가 불량 셀 주소를 검출 → fuse를 프로그램해 불량 주소가 들어오면 디코더가 spare로 우회. 칩 스스로 하면 BISR(built-in self-repair).	process P3
+Repair 정보는 어디 저장되나?	fuse array에 비휘발적으로 저장. 부팅 시 로드해 불량 주소 재매핑을 활성화한다.	process P3
+Redundancy를 무한정 못 넣는 이유는?	여분 회로가 면적·원가를 먹고 그 자체도 불량 날 수 있어 적정량 trade-off가 필요. 수율-면적-redundancy 균형 문제.	process P3
+yield/redundancy가 디지털 설계와 닿는 지점은?	BIST/BISR·fuse·spare 디코더는 전형적 DFT 디지털 회로. 공정 불량을 회로로 구제하는, 공정과 설계가 만나는 접점.	process P3
+AI-for-EDA란?	ML을 칩 설계·검증에 넣어 자동화·최적화. PPA 최적화(Synopsys DSO.ai, Cadence Cerebrus, RL 기반)와 검증 AI(Lint/CDC false violation 분류, RTL 디버그 보조).	aipim P3 지원서연계
+DSO.ai가 무엇인가?	Synopsys의 AI-for-EDA 솔루션. 강화학습으로 합성·P&R 파라미터 공간을 탐색해 PPA(성능·전력·면적)를 자동 최적화.	aipim P3 지원서연계
+본인 RTL Sign-off Agent 경험을 한 줄로?	도메인 지식 기반 Sign-off Agent로 deterministic tool DB와 RAG/LLM을 rule 특성에 따라 분기, 근거 신뢰도 스코어링. Pilot false violation 20%↓.	aipim P3 지원서연계
+본인 검증 자동화 정량 성과는?	RTL Lint Pilot false violation 20%↓, RDC 방법론 false violation 87.7%↓, SFR-to-HW CDC noise 약 95% 분류로 human effort 감소.	aipim P3 지원서연계
+검증에서 AI를 sign-off 대체로 못 쓰는 이유는?	static sign-off는 100% 정확성이 전제. AI는 잔여 오류를 신뢰할 수 없어 대체가 아니라 분류·우선순위·근거 제시로 human effort를 줄이는 보조에 둬야 함.	aipim P3 지원서연계
+Memory wall이란?	연산 성능은 빠르게 느는데 메모리 대역폭·데이터 이동이 못 따라가 시스템이 메모리에서 막히는 현상. AI의 진짜 병목은 연산이 아니라 데이터 이동(에너지·지연).	aipim P3 지원서연계
+Memory wall의 두 가지 해법은?	① 메모리를 연산기 가까이 붙여 대역폭↑(HBM, 외부 해법) ② 연산을 메모리 안에 넣어 데이터 이동 제거(PIM, 내부 해법).	aipim P3 지원서연계
+PIM(Processing-in-Memory)이란?	연산 유닛을 메모리 안/근처에 둬 데이터를 칩 밖으로 안 옮기고 처리. 외부 핀보다 훨씬 큰 내부 DRAM 대역폭을 활용해 memory wall 완화.	aipim P3 지원서연계
+PIM이 memory wall을 해결하는 핵심 원리는?	DRAM 내부 대역폭이 외부 핀 대역폭보다 훨씬 큼. 연산을 bank 안에 둬 데이터를 밖으로 안 옮기고 내부 대역폭으로 바로 계산 → 속도↑, 데이터 이동 전력↓.	aipim P3 지원서연계
+SK하이닉스 GDDR6-AiM이란?	GDDR6 DRAM 각 bank 안에 MAC 연산기를 넣은 PIM. all-bank 병렬. 1GB, 외부 64GB/s vs 내부 GEMV 0.5TB/s(8배). 특정 연산 최대 16배·데이터 이동 전력 약 80%↓.	aipim P3 지원서연계
+AiMX란?	GDDR6-AiM 칩 여러 개를 묶은 생성형 AI 가속 카드. LLM 워크로드에서 GPU 대비 처리시간 약 10배↓, 전력 1/5.	aipim P3 지원서연계
+HBM-PIM이란?	HBM 적층 die 안에 연산기를 넣어 HBM의 초광대역과 PIM을 결합하는 방향. 메모리 병목이 큰 대형 AI 대상.	aipim P3 지원서연계
+PIM은 어떤 연산에 유리한가?	memory-bound·단순 반복 연산(LLM의 GEMV, 벡터연산). compute-bound·복잡 제어는 GPU가 유리해 둘을 나눠 맡긴다.	aipim P3 지원서연계
+HBM과 PIM은 어떻게 상보적인가?	HBM=GPU 옆에서 TB/s 대역폭 공급(외부 해법), PIM=memory-bound 연산을 메모리 안에서 처리(내부 해법). compute-bound는 GPU+HBM, memory-bound는 PIM.	aipim P3 지원서연계
+GDDR6-AiM과 HBM-PIM의 차이는?	GDDR6-AiM은 GDDR 기반 카드형(AiMX), HBM-PIM은 HBM 적층 안에 연산을 넣어 초광대역과 결합. 타깃 시스템·대역폭 규모가 다르다.	aipim P3 지원서연계
+신입 설계자가 PIM/HBM에서 기여할 부분은?	PIM의 bank 내 MAC·명령 디코딩·all-bank 제어, HBM base die의 고속 I/O·테스트 로직 RTL 설계·검증. AI-for-EDA로 개발 TAT 단축.	aipim P3 지원서연계
+지원자 강점과 메모리 R&D의 연결점은?	디지털 설계·CDC·STA·검증 자동화 강점이 PIM 로직·HBM base die 같은 '메모리 속 디지털'에 직접 닿고, AI 기반 검증 자동화 경험으로 개발을 가속.	aipim P3 지원서연계

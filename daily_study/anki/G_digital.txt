@@ -1,0 +1,18 @@
+동기 설계가 주류인 이유?	모든 FF가 공통 clock → STA로 setup/hold 정적 검증 가능, 타이밍 예측 가능. 비동기는 빠르나 race·hazard 많고 검증 도구 약함. 도메인 경계만 CDC로 처리.	digital P1
+Moore FSM 특징?	출력이 현재 state에만 의존. registered라 glitch 없고 안정적이나 입력 반영에 1 clock 더 걸림.	digital P1
+Mealy FSM 특징?	출력이 state+현재 입력에 의존. 적은 state로 빠른 반응이나 입력 조합경로가 출력에 직접 연결돼 glitch 위험. 절충=registered Mealy.	digital P1
+FSM state encoding 선택 기준?	one-hot=빠름·디코딩 간단(FPGA/고속), binary=FF 적음, gray=인접 전이 1비트(저전력·CDC 카운터).	digital P1
+Pipelining이 개선하는 것?	조합 경로를 register stage로 분할 → clock 주파수=throughput↑. 한 데이터 latency는 유지/증가하나 단위시간당 처리량 증가.	digital P1
+Pipeline hazard 3종?	구조적(자원 충돌), 데이터(주로 RAW), 제어(branch). 해결=forwarding/bypass, stall/bubble, branch prediction.	digital P1
+파이프라인 stage를 무한히 늘리면?	register overhead(t_cq+setup)와 hazard penalty 증가로 성능·전력 손해. 최적 깊이 존재.	digital P1
+async reset 특징?	clock 무관 즉시 assert. 단 해제(deassert)가 edge 근처면 recovery/removal 위반→메타 위험.	digital P1
+sync reset 특징?	clock edge에서만 동작. 타이밍 깨끗하나 running clock 필요, reset 폭이 한 주기 이상이어야.	digital P1
+reset synchronizer란?	async assert/sync deassert. reset을 즉시 걸되 해제는 2-FF 동기화해 모든 FF가 같은 edge에 동시에 풀리게 함.	digital P1
+RDC(Reset Domain Crossing)란?	서로 다른 reset 도메인 간 경로. reset assert/deassert가 capture clock과 비동기면 메타 → CDC와 동일 원리로 검증.	digital P1
+시뮬 통과 RTL이 합성 후 달라지는 원인?	(1) incomplete sensitivity list, (2) 의도치 않은 latch 추론, (3) blocking/non-blocking 오용 race, (4) 비합성 구문(initial/delay). lint+LEC로 차단.	digital P1
+의도치 않은 latch는 언제 추론되나?	combinational always의 if/case에서 일부 경로에 대입 누락 → 값 유지 위해 합성기가 latch 생성. 모든 경로 대입 or default로 방지.	digital P1
+RTL↔netlist 동치는 어떻게 검증?	Equivalence Check(LEC, formal). 합성·ECO 후 기능 동일성을 정적 증명. lint·CDC와 함께 sign-off.	digital P1
+glitch가 위험한 곳은?	clock·reset·async set/clear·CDC enable 등 edge/level로 직접 동작하는 입력. 동기 FF 데이터 입력엔 edge에서 안정값만 캡처돼 무해. gated clock은 ICG 사용.	digital P1
+fan-out이 크면 생기는 문제와 해결?	출력 transition·지연 증가로 setup·SI 악화. buffer/inverter tree로 부하 분산, max fan-out/transition 제약. clock/reset은 전용 tree(CTS).	digital P1
+SRAM 메모리 컴파일러란?	표준셀이 아닌 컴파일러가 원하는 깊이·폭의 SRAM(6T bitcell) 매크로 생성, .lib/.lef/모델 제공. 설계자는 hard macro로 인스턴스화 후 peri 로직·BIST 부착.	digital P1
+DRAM과 SRAM 매크로 구도 차이?	DRAM=1T1C cell+sense amp(refresh 필요), SRAM=6T(refresh 불필요). 둘 다 "컴파일/생성된 매크로+peri 디지털" 구도는 동일.	digital P1

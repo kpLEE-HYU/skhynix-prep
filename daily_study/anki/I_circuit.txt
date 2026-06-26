@@ -1,0 +1,19 @@
+MOSFET cutoff 영역?	V_GS < V_th → 채널 없음, I_D≈0(실제론 지수적 subthreshold leakage). overdrive V_ov=V_GS−V_th.	circuit P1
+MOSFET triode/linear 영역과 식?	V_GS>V_th, V_DS<V_ov. I_D=μC_ox(W/L)[(V_GS−V_th)V_DS−V_DS²/2]. V_DS에 거의 비례, 저항처럼 동작.	circuit P1
+MOSFET saturation 영역과 식?	V_GS>V_th, V_DS≥V_ov. drain쪽 pinch-off. I_D=½μC_ox(W/L)(V_GS−V_th)²(1+λV_DS). V_DS 거의 무관한 정전류(λ=채널길이변조).	circuit P1
+디지털 게이트에서 MOS는 주로 어느 영역?	스위칭 중 saturation 거쳐 ON 정착 시 triode(낮은 R_on), OFF는 cutoff. 아날로그 증폭은 saturation 바이어스.	circuit P1
+CMOS 인버터 정적전류가 0에 가까운 이유?	입력 0/1 정상상태에서 PMOS·NMOS 중 하나가 항상 OFF → VDD→GND DC 경로 없음. 전력은 switching+leakage에서만 발생.	circuit P1
+CMOS 인버터 전이 순간의 전류?	입력이 V_th~VDD−|V_tp| 사이일 때 둘 다 잠깐 ON → short-circuit current. 빠른 transition으로 최소화.	circuit P1
+Leakage 종류 3가지?	(1) subthreshold(V_GS<V_th, weak inversion, exp, ~60mV/dec), (2) gate tunneling(얇은 oxide), (3) junction/GIDL. 온도·미세공정에서 급증.	circuit P1
+Short Channel Effect란?	L 축소 시 V_th roll-off, DIBL(drain이 barrier 낮춤), velocity saturation, hot carrier. leakage·변동 증가.	circuit P1
+DRAM sense amplifier 원리?	cell capacitor가 precharge된(VDD/2) bitline과 charge sharing→미소 ΔV(수십mV). cross-coupled inverter latch가 양의 피드백으로 full rail 증폭. read는 destructive→write-back(restore).	circuit P1
+DRAM bitline을 VDD/2로 precharge하는 이유?	0/1 양방향 미소 신호를 대칭으로 감지하고 전력·속도 최적화(open/folded bitline 구조).	circuit P1
+DRAM read가 destructive인 이유?	sense 과정에서 cell의 저장 charge가 소모됨 → 증폭된 값을 다시 cell에 쓰는 write-back(restore)이 동작에 포함.	circuit P1
+차동증폭기를 쓰는 이유?	두 입력의 차만 증폭, common mode(전원노이즈·drift) 억제(높은 CMRR). 노이즈 내성↑. sense amp·op-amp 입력단·IO 수신기 기반.	circuit P1
+CMRR이란?	(차동이득)/(공통모드이득). 클수록 두 입력 공통 노이즈를 잘 제거.	circuit P1
+PLL 구성과 특징?	phase detector+charge pump+loop filter+VCO+divider. 주파수 체배/합성 가능. VCO가 발진기라 jitter 누적.	circuit P1
+DLL 구성과 특징?	phase detector+전압제어 지연선(delay line). 위상만 정렬(체배 X, 출력f=입력f). 발진기 없어 jitter 누적 적고 안정.	circuit P1
+DDR에서 DLL을 쓰는 이유?	출력 DQ/DQS를 외부 clock에 정렬해 skew를 줄이고 data eye 확보. 주파수 체배 불필요하고 위상정렬만 필요하므로 DLL.	circuit P1
+crosstalk란?	인접 net 간 용량·유도 결합. victim에 noise glitch 유기, aggressor 동시천이로 실효 결합용량 변해 지연 빨라짐/느려짐. PrimeTime SI가 반영.	circuit P1
+IR drop이란?	전원/접지망 저항에 전류가 흘러 국소 전압 강하 → 셀이 느려지거나 오동작. di/dt 노이즈·EM과 함께 power integrity 문제. decap·grid 강화로 대응.	circuit P1
+HBM에서 SI/PI가 중요한 이유?	TSV·interposer로 초고밀도·고속 → crosstalk·IR drop·전원노이즈가 동작 속도를 좌우. DQS 정렬(DLL)과 함께 타이밍 마진 결정.	circuit P1

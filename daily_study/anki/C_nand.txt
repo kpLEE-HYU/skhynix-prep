@@ -1,0 +1,19 @@
+NAND가 데이터를 저장하는 원리는?	transistor 게이트 아래 전하저장층에 전자를 가둬 문턱전압(Vt)을 이동시켜 0/1 저장. 전원이 꺼져도 유지=비휘발성.	nand P2
+Floating Gate vs Charge Trap(CTF) 차이는?	FG=도체 poly에 전하 연속 저장(셀간 간섭 큼). CTF=절연체 Si₃N₄ trap에 전하를 이산 포획(간섭↓, 결함에 강함). 3D NAND는 CTF.	nand P2
+3D NAND가 CTF를 쓰는 이유는?	CTF는 cell-to-cell 간섭이 작고 국소 oxide 결함에 강하며 구조가 단순해 수직 적층에 유리하기 때문.	nand P2
+F-N 터널링이란?	Fowler-Nordheim 터널링. 고전계로 얇은 oxide를 전자가 통과. Program=전하 주입(Vt↑), Erase=전하 제거(Vt↓).	nand P2
+NAND의 read/program/erase 단위는?	read·program=page 단위, erase=block 단위. 제자리 덮어쓰기 불가 → 새 page에 쓰고 옛 block을 통째 erase.	nand P2
+NAND가 제자리 덮어쓰기가 안 되는 영향은?	write amplification과 garbage collection 오버헤드 발생 → over-provisioning과 wear leveling이 필요. FTL이 이를 관리.	nand P2
+SLC/MLC/TLC/QLC란?	셀당 저장 bit 수. SLC=1bit(2레벨), MLC=2bit(4), TLC=3bit(8), QLC=4bit(16레벨). bit↑=밀도·저가↑, but 마진·속도·수명↓, ECC 부담↑.	nand P2
+SLC/MLC/TLC/QLC P/E cycle 수명은?	SLC ~100k, MLC ~3k~10k, TLC ~1k~3k, QLC ~수백~1k. 터널링이 oxide를 누적 열화시켜 횟수가 제한됨.	nand P2
+QLC는 어디에 적합한가?	읽기 위주·대용량 저가 저장(아카이브, read-intensive). 좁은 마진·낮은 수명으로 쓰기 많은 곳엔 부적합.	nand P2
+3D NAND란?	평면 미세화 한계로 셀을 수직 적층한 구조. 게이트 층을 쌓은 뒤 channel hole을 위→아래로 etch하고 그 벽에 CTF 셀 형성.	nand P2
+NAND에서 string이란?	하나의 channel hole에 수직으로 직렬 연결된 셀들의 묶음. 고단수는 string stacking으로 나눠 쌓는다.	nand P2
+3D NAND 최신 단수(2025)는?	SK하이닉스 321단 양산(2025), 삼성 286단(9세대). 400단+ 개발 중(SK하이닉스 2025말, 삼성 10세대 V-NAND 400+).	nand P2
+고단수 3D NAND에 hybrid bonding을 쓰는 이유는?	깊은 channel hole의 고종횡비 etch와 적층 응력이 한계라, peri를 별도 wafer로 만들어 cell array에 본딩(CMOS-bonded-array)해 단수를 늘림.	nand P2
+Read disturb란?	한 page 읽기 시 같은 string 비선택 셀에 pass 전압(Vpass)을 거는데, 반복되면 약한 전하 주입으로 Vt가 올라가 bit가 뒤집히는 현상.	nand P2
+Read disturb 대응은?	강력한 ECC로 정정 + 누적 read 횟수가 임계를 넘으면 데이터를 옮겨쓰는 read reclaim(read-disturb-aware refresh)을 컨트롤러가 수행.	nand P2
+Wear leveling이란?	FTL이 write를 전체 block에 고르게 분산해 특정 block이 먼저 마모되는 것을 방지하는 기법.	nand P2
+NAND에서 ECC가 중요한 이유는?	P/E·retention·read disturb로 bit 오류가 늘어남. LDPC 같은 강력한 ECC로 정정해야 신뢰성 확보. QLC일수록 raw BER↑로 부담 큼.	nand P2
+NAND 컨트롤러(FTL)가 하는 일은?	wear leveling + LDPC ECC + garbage collection + read reclaim + bad block 관리로 소자의 비신뢰성을 신뢰성 있는 저장장치로 변환.	nand P2
+NAND 미세화 방식이 DRAM과 다른 점은?	DRAM은 평면 미세화(capacitor 종횡비 문제), NAND는 Z축 적층(300단+). 같은 집적도를 다른 물리 축으로 푼다.	nand P2

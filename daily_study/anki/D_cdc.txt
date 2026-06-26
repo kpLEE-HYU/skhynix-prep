@@ -1,0 +1,23 @@
+메타스터빌리티란?	setup/hold 위반 시 FF 출력이 0/1 사이 불확정 상태로 떠 있다가 확률적으로 resolve되는 현상.<br>비동기 도메인 경계에선 sampling 타이밍을 보장 못 해 필연적으로 발생 → 확률(MTBF)로 관리.	cdc P1
+CDC에서 메타스터빌리티를 0으로 못 만드는 이유?	송신 데이터와 수신 clock이 위상 무관이라 언젠가 반드시 setup/hold 윈도우 안에서 변함. 동기 도메인은 STA로 정적 보장되지만 비동기 경계는 불가능.	cdc P1
+MTBF 공식?	MTBF = e^(t_r/τ) / (T0·f_c·f_d).<br>t_r=resolve 허용시간, τ=resolution 시정수(~20-50ps), T0=metastability window, f_c=sampling clock, f_d=입력 toggle rate.	cdc P1
+MTBF를 개선하는 방법?	(1) FF 단수 추가(2→3단)로 t_r 증가, (2) sampling clock을 늦춤.<br>둘 다 t_r을 늘려 MTBF가 지수적으로 개선. 고주파일수록 f_c·f_d 커져 MTBF 악화.	cdc P1
+2-FF 동기화기 동작 원리?	수신 도메인 FF 2단 직렬. 1단이 metastable 돼도 2단 캡처 전 거의 한 주기 동안 resolve. 2단 metastable 확률이 지수적으로 감소.<br>단 1-bit·level 신호 전용.	cdc P1
+2-FF 동기화기 두 FF 사이에 로직을 넣으면?	금지. 1단의 resolve 시간을 갉아먹어 MTBF가 깨짐. 반드시 back-to-back 배치.	cdc P1
+멀티비트를 비트별 2-FF로 동기화하면 위험한 이유?	bit skew: 비트마다 도착·resolve 시각이 달라 동기화 순간 존재하지 않은 중간 조합값이 보임(data coherency 깨짐). 예: 0111→1000 중 0000/1111이 순간 보임.	cdc P1
+다비트 CDC의 안전한 방법 4가지?	(1) Gray code, (2) async FIFO, (3) req/ack handshake, (4) MUX-recirculation(enable만 동기화+데이터 hold).	cdc P1
+Gray code가 CDC에 유용한 이유?	인접 값이 딱 1비트만 변함 → skew 있어도 옛값/새값만 보이고 invalid 중간값 없음. 메타 위험 비트도 1개뿐. FIFO 포인터에 사용.	cdc P1
+비동기 FIFO 구조?	dual-port RAM + wr_ptr(쓰기도메인)/rd_ptr(읽기도메인). 각 포인터를 Gray 변환→반대 도메인 2-FF 동기화→비교로 full/empty 생성. 포인터 n+1 bit(MSB=wrap)로 full/empty 구별.	cdc P1
+async FIFO full/empty 판정이 보수적인 이유?	동기화 latency로 상대 포인터가 과거값으로 보임 → 실제보다 더 full/empty로 판단 → overflow/underflow 절대 안 나는 안전한 pessimism.	cdc P1
+req/ack 4-phase handshake 흐름?	송신 데이터 안정+req=1 → 수신 req 동기화·캡처 후 ack=1 → 송신 ack 동기화 후 req=0 → 수신 ack=0. 데이터는 false-path. robust하지만 round-trip으로 느림.	cdc P1
+handshake 2-phase vs 4-phase?	2-phase=레벨 toggle로 왕복당 1전송, 빠르나 상태추적 필요. 4-phase=매번 0복귀, 단순·robust.	cdc P1
+MUX-recirculation(data-hold) 기법?	다비트 데이터는 동기화 안 하고 MUX 입력에 유지, enable 1-bit만 동기화. enable 없으면 캡처 FF가 자기값 recirculate, enable 시에만 load. 데이터는 false-path.	cdc P1
+shadow register란?	본 레지스터 옆 그림자 레지스터를 두고 valid 펄스 동기화 시점에 한꺼번에 복사해 다비트 일관성 보장. MUX-recirculation 계열.	cdc P1
+빠른→느린 도메인 1-cycle 펄스가 유실되는 이유와 해결?	펄스 폭이 수신 주기보다 좁으면 sampling 못 해 유실. 해결=toggle 동기화기: 펄스마다 레벨 toggle→2-FF 동기화→edge detect(XOR)로 펄스 복원.	cdc P1
+reconvergence 위험이란?	한 소스에서 갈라져 따로 동기화된 신호들이 재합류할 때 도착 cycle 차이로 glitch/불일치 발생. 한 번만 동기화 후 fan-out하거나 gray/handshake로 회피.	cdc P1
+quasi-static 신호란?	거의 변하지 않는 신호(설정값 등). static처럼 다루되 바뀌는 순간엔 stable-when-sampled 보장 필요. STA에선 false-path 처리.	cdc P1
+CDC에서 false path란?	비동기 crossing 데이터 버스·recirculation 데이터처럼 STA로 타이밍을 잡지 않는 경로. set_false_path로 제외하되 CDC 도구로 동기화기 존재를 구조 검증해야 함.	cdc P1
+CDC 정적 검증 sign-off 구성요소?	(1) 구조검증: crossing 탐지+동기화기/gray 구조 확인, (2) 기능검증: 프로토콜·data-stability SVA, (3) RDC, (4) 근거 있는 waiver. 도구=SpyGlass/Questa/VC CDC.	cdc P1 지원서연계
+CDC waiver 남발의 위험과 관리?	진짜 버그를 숨김. reason-coded·리뷰·버전관리하고 자동화로 신규 vs 기존 waiver를 구분해 회귀 차단.	cdc P1 지원서연계
+SFR/CSR 설정값을 HW로 넘기는 CDC 방법?	quasi-static·독립비트=각 비트 2-FF+false-path. 다비트가 한꺼번에 의미=config update 펄스를 동기화 후 전체 비트 MUX-load 또는 shadow register 복사. SW가 enable을 마지막에 set하는 순서 강제.	cdc P1 지원서연계
+HW status(다비트)를 SW가 읽을 때 동기화?	capture-and-hold 후 valid 펄스 동기화로 한 스냅샷을 읽게 함. 메모리 PHY training 파라미터 설정 path가 전형적 SFR→PHY-clock CDC.	cdc P1 지원서연계

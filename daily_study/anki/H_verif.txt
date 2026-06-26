@@ -1,0 +1,20 @@
+UVM 계층 구조?	test → env → agent(sequencer+driver+monitor) → scoreboard. sequence/sequence_item, phase(build/connect/run), factory·config_db·TLM으로 재사용.	verif P1
+UVM driver 역할?	sequencer가 준 sequence item을 interface 통해 DUT 핀으로 구동.	verif P1
+UVM monitor 역할?	DUT 핀을 수동 관찰해 transaction을 복원 → scoreboard/coverage로 전달.	verif P1
+UVM sequencer 역할?	sequence들을 arbitration해 transaction item을 driver로 전달.	verif P1
+UVM scoreboard 역할?	DUT 출력(monitor 복원값)을 reference model 기대값과 비교해 pass/fail 판정.	verif P1
+UVM active vs passive agent?	active=sequencer+driver로 구동까지, passive=monitor만 둬 관찰·coverage 전용(다른 곳이 구동할 때).	verif P1
+SVA란?	SystemVerilog Assertion. 설계가 지킬 시간적/논리적 속성을 선언적으로 기술해 시뮬·formal로 검증. 버그를 내부에서 즉시 포착.	verif P1
+immediate vs concurrent assertion?	immediate=절차코드 내 그 순간 조건 즉시 체크(조합). concurrent=clock 동기, 여러 cycle 걸친 sequence/property 검증.	verif P1
+SVA implication |-> 와 |=> 차이?	a |-> b = 같은 cycle에 b 성립, a |=> b = 다음 cycle에 b 성립.	verif P1
+code coverage란?	RTL의 line/branch/condition/toggle/FSM이 실제 실행됐는지 보는 구조적 지표. 도구가 자동 추출.	verif P1
+functional coverage란?	설계 의도(시나리오·corner·교차조건)가 일어났는지 covergroup/coverpoint/cross로 측정. 설계자가 정의.	verif P1
+code coverage 100%면 검증 끝?	아님. 특정 조합 시나리오를 안 만들면 기능 hole 잔존. functional coverage도 봐야. coverage≠정확성(checker/assertion이 보장).	verif P1
+constrained random이 directed보다 좋은 점?	제약 내 랜덤 자극으로 사람이 못 생각한 corner까지 자동 도달. coverage 피드백으로 효율 수렴. 옳고 그름은 scoreboard가 판단.	verif P1
+검증 수렴(coverage sign-off) 기준?	code+functional coverage 목표 도달 + 모든 assertion pass + regression green + 남은 hole 분석/waiver(unreachable 입증).	verif P1
+DV vs DFT?	DV=설계가 사양대로 올바른가(기능 검증, 시뮬/formal). DFT=제조 chip의 결함을 test할 수 있게 설계(scan/ATPG/BIST).	verif P1
+scan chain이란?	일반 FF를 scan FF로 바꿔 shift chain 연결. 임의 상태 주입/관찰로 controllability·observability 확보.	verif P1
+ATPG란?	Auto Test Pattern Generation. stuck-at(0/1 고착)·transition(천이지연)·bridging fault model로 결함 검출 패턴 자동 생성.	verif P1
+MBIST란?	Memory BIST. on-chip에서 march 알고리즘(0/1 write-read 패턴)으로 메모리 cell·sense·decoder 결함을 자가 진단. 핀으로 직접 못 보는 메모리용.	verif P1
+redundancy/repair(BISR)란?	여분 spare row/column을 두고 결함 주소를 spare로 재매핑(BISR). 일부 불량 cell이 있어도 chip을 살려 yield↑. e-fuse로 영구(hard) 또는 부팅 시 soft repair.	verif P1
+DRAM에서 DFT 비중이 큰 이유?	array 결함률이 높아 MBIST+BISR가 yield를 좌우. spare row/col·BISR이 메모리 표준.	verif P1
