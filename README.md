@@ -4,9 +4,11 @@
 
 ## 🚀 빠른 시작 (우선순위)
 1. **`02_ask_prep.md`** — a!sk 먼저 (가장 임박한 관문)
-2. **`04_resume_selfmastery.md`** — ★ 내 지원서 완전 이해 (면접 최대 리스크)
-3. **`daily_study/_schedule.md`** — 매일 무엇을 외울지 (D-day 역산)
-4. **`daily_study/anki/skhynix_design.txt`** — Anki에 import해 매일 복습
+2. **`06_mock_exam.md`** — ★ 실전 모의고사 (a!sk 3세트 + 직무 기술 2세트 = 41문항, 타이머·자가채점, 기출 ★ 표시)
+3. **`concepts/`** — ★ 정독용 심층 개념서 11편 (암기 아닌 "완전 이해"용). 진입점 `concepts/00_INDEX.md`
+4. **`04_resume_selfmastery.md`** — 내 지원서 완전 이해 (면접 최대 리스크)
+5. **`daily_study/_schedule.md`** — 매일 무엇을 외울지 (D-day 역산)
+6. **`daily_study/anki/skhynix_design.txt`** — Anki에 import해 매일 복습
 
 ## 📁 파일 안내
 | 파일 | 내용 |
@@ -14,9 +16,11 @@
 | `00_overview.md` | 채용 프로세스·a!sk 정체·면접 구조·인재상 |
 | `01_team_fit.md` | 어느 팀에 맞나(JD 근거) + 로직→메모리 브릿지 12선 |
 | `02_ask_prep.md` | a!sk 7문항 유형·답변프레임·촬영 체크리스트·모의루틴 |
-| `03_interview_job_qbank.md` | 설계·메모리 직무 기술 질문은행 |
+| `03_interview_job_qbank.md` | 설계·메모리 직무 기술 질문은행(키포인트 사전) |
 | `04_resume_selfmastery.md` | ★지원서 모든 기술 주장 1st-principles + 꼬리질문 방어 |
 | `05_positioning.md` | 삼성→하이닉스 / 경력→신입 / 보안·처우·약점 스크립트 |
+| `06_mock_exam.md` | ★ **모의고사**: a!sk 3세트(상황질문 포함)+직무 기술 2세트, 41문항, 타이머·자가채점 루브릭 |
+| `concepts/` | ★ **정독용 심층 개념서 11편**(설계 중심: CDC/RDC·STA·검증/DFT·DRAM·HBM·고속I/O·소자·저전력·산업 + 공정 라이트). 진입점 `concepts/00_INDEX.md` |
 | `daily_study/` | A~K 암기카드 (P1 설계역량 / P2 메모리 / P3 심화) + `_schedule.md` + `anki/` |
 | `sources.md` | 출처 링크 (재조사용) |
 | `지원서_20260625.md` | 제출 지원서(원본) |
@@ -25,9 +29,9 @@
 Anki 복습 → 신규 토픽 2개(P1 설계 + P2 메모리) → 구술 1개 녹음 → 막힌 것 재확인. (상세: `daily_study/_schedule.md`)
 
 ## ✅ 검증/연습
+- **모의고사 루프**(핵심): `concepts/`로 정독 → `06_mock_exam.md`의 해당 🔗 문항을 **타이머 켜고 녹음** → 자가채점 루브릭 → 막히면 개념서 재독. a!sk SET 1~3, 기술 SET A·B를 회차별 점수표로 관리.
 - **Anki import**: `daily_study/anki/skhynix_design.txt` → Anki "파일 가져오기"(구분=탭, 3번째 필드=태그) → 카드 분할·태그 확인.
-- **모의 a!sk 녹화 2회**(`02`의 7문항), **모의 면접 2회**(`04`/`05` 무작위 질문 구술).
-- 매일 P1·P2 카드 정답률 90%+, '지원서연계' 태그 100% 목표.
+- 매일 P1·P2 카드 정답률 90%+, 모의고사 a!sk 평균 4.0+/기술 3.5+(3회차) 목표.
 
 ---
 *맞춤 근거: 삼성 S.LSI Design Technology 경력(RTL Sign-off·CDC/RDC·EDA 자동화·AI), 한양대 전자(암호HW·PPA), SK하이닉스 설계 12롤 JD, ref/직무핏.pdf 브릿지 전략.*
