@@ -18,14 +18,17 @@ JD 기준 핵심은 **디지털설계·RTL·SoC·검증·DFT·STA·CDC/RDC·SI/P
 | `05_CDC_RDC_완전이해.md` | 클럭/리셋 도메인 크로싱, 메타스터빌리티, 동기화 | 지원자 **최대 강점** + 메모리 Peri 다중도메인 핵심 |
 | `06_STA_완전이해.md` | Static Timing Analysis, setup/hold, 코너, closure | 지원자 강점 + HBM/DDR 고속 I/O 마진 직결 |
 | `07_검증_DFT_MBIST_완전이해.md` | UVM·coverage·정합성·scan/ATPG·MBIST/repair | 지원자 강점 + JD "검증" 직무 정조준 |
+| `12_RTL_디지털설계_기초.md` | 조합/순차·FSM·파이프라인·blocking/non-blocking·reset 전략·합성·빌딩블록 | **"직접 RTL 설계 가능"** 갭 방어 + 모든 설계롤 토대 |
+| `13_온칩버스_인터커넥트.md` | valid/ready·AMBA AXI/AHB/APB·arbitration·NoC·async bridge | JD 명시(AMBA/NoC/Top Bus/Async Bridge), SoC 통합 |
 
-### 🥈 2순위 — 메모리 디바이스 갭 보강 (반드시)
+### 🥈 2순위 — 메모리 디바이스·아키텍처 갭 보강 (반드시)
 | 문서 | 주제 | 비고 |
 |---|---|---|
 | `02_DRAM_완전이해.md` | 1T1C·sensing·타이밍·refresh·bank·Peri·스케일링 | ★기출 다수("DRAM 설명", "refresh 왜") |
+| `14_메모리컨트롤러_RAS.md` | 명령/스케줄링·refresh관리·ODT·JEDEC·ECC/scrubbing/RAS | JD 명시("DRAM Memory Controller", "RAS") — 메모리의 디지털 두뇌 |
 | `04_HBM_패키징_완전이해.md` | 메모리 월·TSV·적층·MR-MUF·base die·수율·SI/PI | ★기출("HBM 시장", "SI 대응") + SK 핵심 제품 |
 | `09_고속인터페이스_PHY_SIPI_완전이해.md` | 고속 I/O·등화(DFE/CTLE/FFE)·DLL/PLL·SI/PI | JD 최빈출 키워드(RX/TX/ODT/Equalizer/SerDes) |
-| `03_NAND_완전이해.md` | 전하저장·string·program/erase·3D·수명 | ★기출("NAND 설명", "DRAM vs NAND") |
+| `03_NAND_완전이해.md` | 전하저장·string·program/erase·3D·수명·레이턴시/쓰루풋 | ★기출("NAND 설명", "DRAM vs NAND") |
 
 ### 🥉 3순위 — 기초·신뢰성·산업 (강점/갭을 받쳐주는 토대)
 | 문서 | 주제 | 비고 |
@@ -49,16 +52,21 @@ JD 기준 핵심은 **디지털설계·RTL·SoC·검증·DFT·STA·CDC/RDC·SI/P
 |---|---|---|
 | D-14 | 05 CDC/RDC | 기술 SET A: A1·A2·A9 |
 | D-13 | 06 STA | 기술 SET A: A3 / a!sk SET3 Q4 |
+| D-13 | 12 RTL 설계 기초 | 기술 SET C: C1~C4 / PART4: P1~P4 |
 | D-12 | 07 검증/DFT/MBIST | 기술 SET A: A4·A5·A6·A7 |
+| D-12 | 13 온칩버스 | 기술 SET C: C5~C7·C10 / PART4: P5~P9 |
 | D-11 | 02 DRAM | 기술 SET B: B1·B2 / a!sk SET1 Q4 |
+| D-11 | 14 메모리컨트롤러/RAS | 기술 SET C: C8·C9 / 드릴 24·26 |
 | D-10 | 04 HBM | 기술 SET B: B4·B9 |
 | D-9 | 09 고속I/O·SI/PI | 기술 SET B: B5 / 빠른드릴 7·9·10·20 |
-| D-8 | 03 NAND | 기술 SET B: B3·B1 |
-| D-7 | 01 소자/MOSFET | 기술 SET B: B6·B7 |
+| D-8 | 03 NAND | 기술 SET B: B3·B1 / 드릴 21·22 |
+| D-7 | 01 소자/MOSFET | 기술 SET B: B6·B7 / 드릴 23 |
 | D-6 | 08 저전력/신뢰성 | 기술 SET A: A8 / B: B8 |
 | D-5 | 10 산업(+최신화) | 기술 SET B: B9·B10 |
 | D-4~ | 약한 문서 재독 | a!sk SET1~3 통째 녹화 |
 | 직전 | 11 공정 라이트 훑기 | 점수 낮은 문항만 |
+
+> 14편이라 하루 1편이 빠듯하면, 강점 영역(05·06·07·12·13)을 먼저 빠르게 1회독하고 약한 곳을 2회독하는 식으로 우선순위를 둔다. 핵심은 "정독 후 즉시 구술"의 짝 맞춤.
 
 ---
 

@@ -4,7 +4,7 @@
 
 ## 🚀 빠른 시작 (우선순위)
 1. **`02_ask_prep.md`** — a!sk 먼저 (가장 임박한 관문)
-2. **`06_mock_exam.md`** — ★ 실전 모의고사 (a!sk 3세트 + 직무 기술 2세트 = 41문항, 타이머·자가채점, 기출 ★ 표시)
+2. **`06_mock_exam.md`** — ★ 실전 모의고사 (a!sk 3세트 + 직무 기술 3세트 + RTL 설계문제 = 60+문항 + 드릴 26, 타이머·자가채점, 기출 ★ 표시)
 3. **`concepts/`** — ★ 정독용 심층 개념서 11편 (암기 아닌 "완전 이해"용). 진입점 `concepts/00_INDEX.md`
 4. **`04_resume_selfmastery.md`** — 내 지원서 완전 이해 (면접 최대 리스크)
 5. **`daily_study/_schedule.md`** — 매일 무엇을 외울지 (D-day 역산)
@@ -19,8 +19,8 @@
 | `03_interview_job_qbank.md` | 설계·메모리 직무 기술 질문은행(키포인트 사전) |
 | `04_resume_selfmastery.md` | ★지원서 모든 기술 주장 1st-principles + 꼬리질문 방어 |
 | `05_positioning.md` | 삼성→하이닉스 / 경력→신입 / 보안·처우·약점 스크립트 |
-| `06_mock_exam.md` | ★ **모의고사**: a!sk 3세트(상황질문 포함)+직무 기술 2세트, 41문항, 타이머·자가채점 루브릭 |
-| `concepts/` | ★ **정독용 심층 개념서 11편**(설계 중심: CDC/RDC·STA·검증/DFT·DRAM·HBM·고속I/O·소자·저전력·산업 + 공정 라이트). 진입점 `concepts/00_INDEX.md` |
+| `06_mock_exam.md` | ★ **모의고사**: a!sk 3세트(상황질문 포함)+직무 기술 3세트(A 디지털/검증·B 디바이스/HBM·C RTL/SoC/버스/컨트롤러)+RTL 설계문제 10+빠른드릴 26, 타이머·자가채점 루브릭 |
+| `concepts/` | ★ **정독용 심층 개념서 14편**(설계 중심: CDC/RDC·STA·검증/DFT·고속I/O·**RTL설계기초·온칩버스·메모리컨트롤러/RAS**·DRAM·HBM·NAND·소자·저전력·산업 + 공정 라이트). 진입점 `concepts/00_INDEX.md` |
 | `daily_study/` | A~K 암기카드 (P1 설계역량 / P2 메모리 / P3 심화) + `_schedule.md` + `anki/` |
 | `sources.md` | 출처 링크 (재조사용) |
 | `지원서_20260625.md` | 제출 지원서(원본) |

@@ -304,6 +304,67 @@
 
 ---
 
+## 기술 SET C — RTL·SoC·버스·컨트롤러 (설계 직무 정조준, JD 키워드)
+
+> JD에 반복 등장하나 기존 자료에 약했던 영역을 정조준한 세트. 지원자의 "방법론·검증만이 아니라 직접 설계도 한다"를 증명하는 구간. `concepts/12·13·14`가 정독 짝.
+
+**C1.** ◆ **동기 설계가 비동기 설계보다 주류인 이유**는? 단점은 무엇으로 메웁니까?
+　↳꼬리: 비동기의 장점(저전력·평균성능)? 동기가 STA로 검증 쉬운 이유? 글로벌 클럭의 부담은?
+　🔗`concepts/12_RTL_디지털설계_기초`
+
+**C2.** ◆ **Moore와 Mealy FSM의 차이**는? 어떤 상황에 무엇을 쓰나요?
+　↳꼬리: 출력 glitch가 문제될 때? one-hot encoding의 장단점? 안전한 FSM(미정의 상태 복구)?
+　🔗`concepts/12_RTL_디지털설계_기초`
+
+**C3.** ◆ Verilog에서 **blocking(=)과 non-blocking(<=)**의 차이와, 잘못 쓰면 생기는 문제는?
+　↳꼬리: 순차로직에 왜 non-blocking? simulation-synthesis mismatch 사례? 의도치 않은 latch 추론은 왜?
+　🔗`concepts/12_RTL_디지털설계_기초`
+
+**C4.** ◆ **파이프라이닝**은 무엇을 개선하고 무엇은 못 합니까? hazard에는 어떤 종류가 있나요?
+　↳꼬리: throughput vs latency? RAW/WAR/WAW 중 진짜 위험한 것? forwarding/stall? 너무 깊게 쪼개면?
+　🔗`concepts/12_RTL_디지털설계_기초`
+
+**C5.** ◆ 버스의 기본인 **valid/ready 핸드셰이크**와 **backpressure**를 설명하세요.
+　↳꼬리: ready가 valid에 의존하면 안 되는 이유(조합 루프/deadlock)? skid buffer는 왜?
+　🔗`concepts/13_온칩버스_인터커넥트`
+
+**C6.** ◆ **AXI가 AHB보다 좋은 점**은? (5채널·outstanding·burst·out-of-order)
+　↳꼬리: 채널을 왜 분리하나? outstanding이 성능에 주는 이점? ID 기반 out-of-order? APB는 언제?
+　🔗`concepts/13_온칩버스_인터커넥트`
+
+**C7.** ◆ 인터커넥트에서 **arbitration(중재)**이 왜 필요하고, round-robin이 fixed-priority보다 나은 점은?
+　↳꼬리: starvation이란? credit-based flow control? deadlock을 어떻게 막나?
+　🔗`concepts/13_온칩버스_인터커넥트`
+
+**C8.** ◆ **메모리 컨트롤러**가 하는 일을 설명하세요. (명령 변환·타이밍 집행·스케줄링)
+　↳꼬리: open-page vs closed-page 정책? FR-FCFS? tRCD/tRP 같은 타이밍을 누가 지키나? bank 병렬성을 어떻게 활용?
+　🔗`concepts/14_메모리컨트롤러_RAS`, `concepts/02_DRAM`
+
+**C9.** ◆ **RAS**란 무엇이고, ECC 계층(on-die / link / system)은 어떻게 다른가요?
+　↳꼬리: scrubbing(patrol/demand)이란? CE vs UE? 컨트롤러 레벨 RowHammer 완화? 왜 데이터센터에서 필수?
+　🔗`concepts/14_메모리컨트롤러_RAS`, `concepts/08_저전력_신뢰성`
+
+**C10.** ◆ **async bridge**(버스가 클럭 도메인을 건널 때)는 무엇이고 왜 까다롭나요?
+　↳꼬리: 이게 CDC와 같은 문제인 이유? async FIFO로 어떻게 푸나? reset 도메인은(RDC)?
+　🔗`concepts/13_온칩버스_인터커넥트`, `concepts/05_CDC_RDC`
+
+<details><summary>▣ 기술 SET C 핵심 채점 포인트</summary>
+
+- **C1**: 동기=공통 클럭 → STA로 정적 타이밍 검증 가능·설계/검증 단순(주류). 비동기=글로벌 클럭 없어 평균 성능·저전력 유리하나 hazard·검증 난해. 단점(클럭 분배·전력)은 CTS·clock gating으로 완화.
+- **C2**: Moore=출력이 현재 state만(registered, glitch 없음, 1-cycle latency). Mealy=출력이 state+입력(빠른 반응, state 적음, 입력 glitch 전파). 출력 안정성 필요→Moore, 빠른 반응/면적→Mealy. one-hot=빠르고 디코딩 단순, FF 더 씀.
+- **C3**: blocking(=)=순차적 즉시 대입(조합로직 always_comb), non-blocking(<=)=동시 갱신(순차로직 always_ff). 순차에 blocking 쓰면 race·shift 오류, 조합에 불완전 sensitivity/latch 추론→sim-synth mismatch.
+- **C4**: 파이프라인=조합경로를 레지스터로 분할→throughput(주파수)↑, latency는 유지/증가(개선 못 함). hazard: 구조/데이터(RAW real)/제어. forwarding·stall·bubble. 너무 깊으면 레지스터 오버헤드·latency·분기 페널티↑.
+- **C5**: valid(송신 준비)·ready(수신 준비) 둘 다 1인 사이클에만 전송. ready를 내려 backpressure. ready가 valid의 조합함수면 루프/타이밍 문제→skid buffer로 끊음.
+- **C6**: AXI=AR/R/AW/W/B 5채널 독립(읽기/쓰기 동시)·outstanding(여러 미완료 거래로 지연 은닉)·burst·ID로 out-of-order 완료. AHB=단일 파이프라인. APB=저속 주변장치 단순 제어.
+- **C7**: 여러 마스터가 한 자원 경쟁→중재 필요. fixed priority=낮은 우선순위 starvation 위험. round-robin=공정. credit-based=수신 여유만큼만 발행해 overflow/deadlock 방지.
+- **C8**: 호스트 요청을 JEDEC 명령(ACT/RD/WR/PRE/REF)으로 변환+주소 디코딩, tRCD/tRP/tRAS 등 타이밍을 위반 없이 발행, 스케줄러가 bank/bank-group 병렬성으로 명령 인터리빙. open-page=지역성 베팅, closed-page=충돌 줄임. FR-FCFS=준비된(row hit) 요청 우선.
+- **C9**: RAS=Reliability/Availability/Serviceability. on-die ECC=셀 단위(미세화 보정), link/HBM ECC=전송 오류, system ECC=rank 단위 전체. scrubbing=잠자는 비트오류를 주기적/접근시 정정. CE=정정됨, UE=정정불가. 컨트롤러가 TRR/RFM으로 RowHammer 완화.
+- **C10**: 버스가 서로 다른 클럭 도메인을 건너면 메타스터빌리티 위험=CDC 문제. async FIFO(gray 포인터 동기화)로 데이터, handshake로 제어. reset 도메인 다르면 RDC도.
+
+</details>
+
+---
+
 # PART 3 — 빠른 구술 드릴 (랜덤 30초 답변, 워밍업/마무리용)
 
 > 타이머 30초. 정의→핵심→(가능하면 메모리 연결) 한 호흡. 매일 5개씩 무작위로.
@@ -328,8 +389,50 @@
 18. UPF로 무엇을 기술하나? ◆
 19. AMBA/AXI 같은 on-chip 버스를 쓰는 이유? ◆(JD 키워드)
 20. CDR(Clock Data Recovery)이 무엇을 하나? ◆(JD 키워드)
+21. NAND read/program/erase 레이턴시 순서와 이유? ◆
+22. throughput과 latency의 차이(메모리 관점)? ◆
+23. 노이즈 마진(NMH/NML)이란? CMOS가 큰 이유? ★
+24. open-page vs closed-page 정책? ◆(JD 키워드)
+25. reset synchronizer가 필요한 이유? ◆
+26. FR-FCFS 스케줄링이란? ◆
 
 > 답이 막히는 번호 = 그날의 정독 우선순위. 모든 답은 `concepts/`·`daily_study/`·`03`에 있음.
+
+---
+
+# PART 4 — RTL 설계/코딩 문제 (설계 직무 화이트보드 대비)
+
+> 설계 직무 면접은 "설명"뿐 아니라 **"이걸 Verilog로/상태도로 그려봐"** 같은 즉석 설계를 시키기도 한다(특히 RTL/SoC/Logic 롤). 화이트보드/구술로 **접근법 → 블록도/상태도 → 핵심 코드 골격 → 코너 케이스**를 말하는 연습. 완성 코드보다 **사고 과정과 함정 인지**가 평가된다. 정독 짝: `concepts/12·13·05`.
+>
+> 연습법: 문제당 5분. 종이에 (1) 입출력 정의 (2) 블록도/상태도 (3) 핵심 always 블록 (4) 리셋·코너. 그 뒤 ▣ 펼쳐 자가점검.
+
+**P1.** 2-FF synchronizer를 Verilog로 작성하고, 왜 2단인지·언제 3단으로 늘리는지 설명하라. ◆
+**P2.** 비동기 assert·동기 deassert "reset synchronizer"를 설계하라. 왜 deassert만 동기화하나? ◆
+**P3.** mod-N 카운터와 **÷3 클럭 분주기(50% duty)**를 설계하라. (홀수 분주의 함정) ◆
+**P4.** 입력 비트스트림에서 **"1011"을 검출(overlap 허용)** 하는 FSM을 상태도+코드로. Moore/Mealy 중 선택·이유. ◆
+**P5.** **gray code 카운터**를 설계하라. 왜 CDC 포인터에 gray를 쓰나? ◆
+**P6.** **async FIFO**의 구조(read/write 포인터 gray 동기화)와 **깊이 계산** 개념을 설명하라. ◆
+**P7.** **round-robin arbiter**(N요청)를 설계하라. fixed-priority 대비 차이는? ◆
+**P8.** **valid/ready 스킷 버퍼(skid buffer)** 로 backpressure를 끊는 구조를 설계하라. ◆
+**P9.** **edge detector**(rising) 및 **느린→빠른/빠른→느린 펄스 동기화기**를 설계하라. ◆
+**P10.** **glitch-free clock gating(ICG)** 동작과, 왜 raw AND 게이팅이 위험한지 설명하라. ◆
+
+<details><summary>▣ PART 4 핵심 채점 포인트 (코드 골격·함정)</summary>
+
+- **P1**: `q1<=d; q2<=q1;`(non-blocking). 첫 FF가 메타 상태를 settle할 1클럭을 벌어줌. 데이터율↑/MTBF 부족 시 3단. 단일 비트에만, 다중비트 금지.
+- **P2**: `rst_sync`를 두 FF로 — reset assert는 비동기로 즉시(전원/이상 시 즉각 정지), deassert는 클럭에 동기화(메타·recovery/removal 회피). 두 FF에 async reset 입력, 입력 D는 1로 묶음.
+- **P3**: 짝수 분주=카운터 MSB/토글. **홀수(÷3) 50% duty**=상승엣지 카운터와 하강엣지 카운터를 OR(또는 1.5클럭 위상). 함정: 단순 카운터는 듀티 비대칭.
+- **P4**: 상태 S0..S(검출). overlap이면 부분일치로 되돌아감(예 "1011" 검출 후 마지막 "1"을 다음 후보로). Moore=검출 출력이 한 박자 늦지만 glitch 없음. 코드: `always_ff` 상태천이 + 출력 디코드.
+- **P5**: 인접 코드가 **1비트만** 변함 → CDC 동기화 시 한 번에 한 비트만 흔들려 안전. async FIFO read/write 포인터에 사용.
+- **P6**: write/read 포인터를 각각 gray로 변환→상대 도메인 2-FF 동기화→full/empty 비교. 깊이=버스트·생산/소비율·동기화 지연을 견디게(=유실 없는 최소 깊이). 메모리 자체는 동기화 불필요(주소만).
+- **P7**: 마지막 grant 다음부터 순환 우선순위(mask+priority encoder 또는 rotating pointer). fixed-priority의 starvation 제거.
+- **P8**: 두 단 레지스터로 valid/data를 잡아 ready 하강에도 1개 더 받아냄 → 조합 ready 루프 차단·full throughput. (간단형: skid register + 상태)
+- **P9**: edge detect=`d & ~d_delayed`(1클럭 지연 후 비교). 느린→빠른=2-FF 동기화 후 edge. 빠른→느린=토글+동기화+edge(펄스 폭이 수신 클럭보다 짧으면 유실되니 toggle 방식).
+- **P10**: ICG=enable을 클럭 **low 구간에 latch**한 뒤 AND → enable이 클럭 high 중 흔들려도 출력 glitch 없음. raw `clk & en`은 en 천이가 클럭 high에 겹치면 글리치 클럭 발생→치명적.
+
+</details>
+
+> ⚠️ 이 문제들은 "정답 코드 암기"가 목적이 아니다. **말로 설계 과정을 풀어내는 연습**이 핵심 — `concepts/12·13`을 먼저 정독한 뒤 도전하라.
 
 ---
 
@@ -342,6 +445,8 @@
 |  | a!sk SET3 |  |  |  |
 |  | 기술 SET A |  |  |  |
 |  | 기술 SET B |  |  |  |
+|  | 기술 SET C |  |  |  |
+|  | PART4 설계문제 |  |  |  |
 
 > 목표: 3회차에 a!sk 평균 4.0+, 기술 3.5+. 같은 문항을 2주 간격 2회 이상 풀어 "외운 답"이 아니라 "이해한 답"인지 확인.
 
